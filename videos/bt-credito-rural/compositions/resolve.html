@@ -259,8 +259,11 @@
 
           // borda do bananal ao pe da tela, em contraluz dourado (eco da abertura, agora sob controle)
           const ROWS = [-12.25, -8.75, -5.25, -1.75, 1.75, 5.25, 8.75, 12.25];
-          const grove = window.BTGrove.create($("rs-field"), { seed: 11, rows: ROWS, zFrom: 30, zTo: -110, sprinklers: false });
+          const grove = window.BTGrove.create($("rs-field"), { seed: 11, rows: ROWS, zFrom: 30, zTo: -110, sprinklers: false, antialias: false });
+          let drawnT = -1;
           function drawField(t) {
+            if (t === drawnT) return;
+            drawnT = t;
             const z = -40 + 0.45 * t;
             grove.render({
               eye: [27, 1.0, z],

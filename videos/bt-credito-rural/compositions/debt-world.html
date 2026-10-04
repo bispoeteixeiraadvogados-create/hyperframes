@@ -866,7 +866,7 @@
           const GROVE = { seed: 7, rows: ROWS, zFrom: 9, zTo: -120, sprinklers: true, extra: PUSH };
           const canvas = $("dw-field");
           const nearCanvas = $("dw-near");
-          const grove = window.BTGrove.create(canvas, GROVE);
+          const grove = window.BTGrove.create(canvas, Object.assign({ antialias: false }, GROVE));
           const groveNear = window.BTGrove.create(nearCanvas, Object.assign({ antialias: false }, GROVE));
           function fieldPos(t) {
             let p = 70 * 0.16 * (1 - Math.exp(-t / 0.16)) + 1.15 * t;
@@ -913,14 +913,19 @@
               fogAlpha: true,
               sun: [0.22, 0.1, -1],
               split: 2.4,
+              maxD: 72,
             };
           }
+          let drawnT = -1;
           function drawField(t) {
+            // o mesmo instante pode chegar pelo onUpdate e pelo hf-seek: desenha uma vez so
+            if (t === drawnT) return;
+            drawnT = t;
             const s = groveState(t);
             grove.render(Object.assign({ mode: 1 }, s));
             groveNear.render(Object.assign({ mode: 2 }, s, { exposure: s.exposure * 1.7 }));
             // foco: abre desfocado no rush e assenta; a camada distante fica um pouco mais baixa na parede
-            const blur = 0.6 + 6.5 * (1 - smooth(0.22, 0.52, t));
+            const blur = 0.9 + 6.2 * (1 - smooth(0.22, 0.52, t));
             canvas.style.filter = `blur(${blur.toFixed(2)}px)`;
             canvas.style.opacity = (1 - 0.45 * smooth(T.fly[0], T.fly[1], t)).toFixed(3);
             nearCanvas.style.filter = `blur(${(13 + 8 * (1 - smooth(0.2, 0.6, t))).toFixed(2)}px)`;

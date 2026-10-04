@@ -712,11 +712,12 @@ void main() {
       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, g.idx, gl.STATIC_DRAW);
       return { vbo, ibo, count: g.idx.length };
     }
-    const leafHi = geo(leafGrid(36, 10));
-    const leafLo = geo(leafGrid(14, 4));
+    const leafHi = geo(leafGrid(24, 7));
+    const leafLo = geo(leafGrid(9, 3));
     const tubeHi = geo(tubeGrid(14, 16));
     const tubeLo = geo(tubeGrid(7, 6));
-    const bunchGeo = geo(tubeGrid(66, 84));
+    const bunchHi = geo(tubeGrid(44, 56));
+    const bunchLo = geo(tubeGrid(14, 18));
     const quad = geo({
       pts: new Float32Array([-1, -1, 1, -1, 1, 1, -1, 1]),
       idx: new Uint16Array([0, 1, 2, 0, 2, 3]),
@@ -747,7 +748,7 @@ void main() {
         }
       }
     }
-    function cull(src, stride, eye, fwd, maxD, nearD, wantNear) {
+    function cull(src, stride, eye, fwd, maxD, nearD, wantNear, tanH) {
       const near = [];
       const far = [];
       for (let i = 0; i < src.length; i += stride) {
@@ -756,7 +757,7 @@ void main() {
         const along = dx * fwd[0] + dz * fwd[2];
         if (along < -4 || along > maxD) continue;
         const d = Math.hypot(dx, dz);
-        if (Math.abs(dx * fwd[2] - dz * fwd[0]) > along * 1.2 + 6) continue;
+        if (Math.abs(dx * fwd[2] - dz * fwd[0]) > along * tanH * 1.15 + 3.2) continue;
         if (wantNear !== undefined && wantNear && d > nearD + 4) continue;
         const dst = d < nearD ? near : far;
         for (let k = 0; k < stride; k++) dst.push(src[i + k]);
@@ -810,6 +811,7 @@ void main() {
       gl.viewport(0, 0, W, H);
       const aspect = W / H;
       const fovy = (s.fov * Math.PI) / 180;
+      const tanH = Math.tan(fovy / 2) * aspect;
       const view = lookAt(s.eye, s.target, s.up || [0, 1, 0]);
       const proj = perspective(fovy, aspect, 0.05, 220);
       s.vp = mul(proj, view);
@@ -854,18 +856,18 @@ void main() {
       const st = progs.stem;
       gl.useProgram(st.p);
       setCommon(st, s);
-      const sc = cull(data.stems, STEM_STRIDE, s.eye, fwd, s.maxD, 14, wantNear);
+      const sc = cull(data.stems, STEM_STRIDE, s.eye, fwd, s.maxD, 10, wantNear, tanH);
       const isBunch = (arr, yes) => {
         const out = [];
         for (let i = 0; i < arr.length; i += STEM_STRIDE)
           if (arr[i + 7] > 1.5 === yes) for (let k = 0; k < STEM_STRIDE; k++) out.push(arr[i + k]);
         return new Float32Array(out);
       };
-      const bunches = new Float32Array([...isBunch(sc.near, true), ...isBunch(sc.far, true)]);
       [
         [isBunch(sc.near, false), tubeHi],
         [isBunch(sc.far, false), tubeLo],
-        [bunches, bunchGeo],
+        [isBunch(sc.near, true), bunchHi],
+        [isBunch(sc.far, true), bunchLo],
       ].forEach(([arr, g]) => {
         if (!arr.length) return;
         bindGeo(g);
@@ -883,7 +885,7 @@ void main() {
       const lf = progs.leaf;
       gl.useProgram(lf.p);
       setCommon(lf, s);
-      const lc = cull(data.leaves, LEAF_STRIDE, s.eye, fwd, s.maxD, 16, wantNear);
+      const lc = cull(data.leaves, LEAF_STRIDE, s.eye, fwd, s.maxD, 12, wantNear, tanH);
       [
         [lc.near, leafHi],
         [lc.far, leafLo],
