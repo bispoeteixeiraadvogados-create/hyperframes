@@ -1,0 +1,23 @@
+{
+  "vo-s1": {
+    "text": "Quando a dívida cresce mais rápido que a sua capacidade de pagamento, o problema deixa de ser apenas o valor da parcela.",
+    "speed": 1.1,
+    "duration": 6.805,
+    "lufs": -18.0,
+    "peak_db": -6.0
+  },
+  "vo-s2": {
+    "text": "É preciso entender o que está fazendo essa dívida crescer.",
+    "speed": 1.08,
+    "duration": 3.541,
+    "lufs": -18.01,
+    "peak_db": -6.0
+  },
+  "vo-s3": {
+    "text": "Crédito rural exige análise.",
+    "speed": 0.95,
+    "duration": 2.155,
+    "lufs": -18.0,
+    "peak_db": -6.0
+  }
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <title>Bispo & Teixeira: Crédito Rural (Reels 9:16)</title>
+    <!-- GSAP embutido localmente: o render nao depende de CDN nem de rede. -->
+    <script src="assets/vendor/gsap.min.js"></script>
+    <!-- Lavoura em canvas compartilhada pelas duas cenas (funcao pura do tempo). -->
+    <script src="assets/js/bt-field.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #081a35;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #081a35;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-fpqp" id="root" data-composition-id="main" data-start="0" data-duration="15.5" data-width="1080" data-height="1920">
+      <!-- Cena 1: rush na lavoura, escalada do saldo devedor, pressao, parede de numeros, congelamento -->
+      <div data-hf-id="hf-sfrb" id="debt-world" data-composition-id="debt-world" data-composition-src="compositions/debt-world.html" data-start="0" data-duration="11.2" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+      <!-- Cena 2: "Crédito rural exige análise." e assinatura Bispo & Teixeira -->
+      <div data-hf-id="hf-cnj8" id="resolve" data-composition-id="resolve" data-composition-src="compositions/resolve.html" data-start="11.2" data-duration="4.3" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1920"></div>
+
+      <!-- Narracao pt-BR (Kokoro pm_alex), uma frase por clipe -->
+      <audio data-hf-id="hf-c1ka" id="vo-s1" src="assets/audio/vo-s1.wav" data-start="0.25" data-duration="6.805" data-track-index="3" data-volume="1"></audio>
+      <audio data-hf-id="hf-cetw" id="vo-s2" src="assets/audio/vo-s2.wav" data-start="7.2" data-duration="3.541" data-track-index="3" data-volume="1"></audio>
+      <audio data-hf-id="hf-trj0" id="vo-s3" src="assets/audio/vo-s3.wav" data-start="11.25" data-duration="2.155" data-track-index="3" data-volume="1"></audio>
+      <!-- Trilha (com recorte dinamico sob a voz feito na sintese) e efeitos sincronizados -->
+      <audio data-hf-id="hf-dq2y" id="music" src="assets/audio/music.wav" data-start="0" data-duration="15.5" data-track-index="4" data-volume="1"></audio>
+      <audio data-hf-id="hf-0i0f" id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="15.5" data-track-index="5" data-volume="1"></audio>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

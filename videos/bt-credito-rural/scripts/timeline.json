@@ -1,0 +1,69 @@
+{
+  "_doc": "Relogio unico do filme (segundos absolutos). A narracao define o tempo; audio e composicao leem estes valores. Se a narracao for regravada, refaca o alinhamento (scripts/tts.py) e atualize aqui e nas constantes T{} das composicoes.",
+  "fps": 30,
+  "duration": 15.5,
+  "vo": [
+    {
+      "id": "vo-s1",
+      "file": "vo-s1.wav",
+      "start": 0.25
+    },
+    {
+      "id": "vo-s2",
+      "file": "vo-s2.wav",
+      "start": 7.2
+    },
+    {
+      "id": "vo-s3",
+      "file": "vo-s3.wav",
+      "start": 11.25
+    }
+  ],
+  "rush": [0.0, 0.5],
+  "beats": [
+    {
+      "t": 0.56,
+      "value": 10000,
+      "kind": "click"
+    },
+    {
+      "t": 1.68,
+      "value": 11200,
+      "kind": "pum1"
+    },
+    {
+      "t": 2.69,
+      "value": 13480,
+      "kind": "pum2"
+    },
+    {
+      "t": 3.43,
+      "value": 17640,
+      "kind": "pum3"
+    },
+    {
+      "t": 4.41,
+      "value": 22390,
+      "kind": "pum4"
+    }
+  ],
+  "rollLead": 0.2,
+  "cresce": 1.0,
+  "commaPause": [4.21, 4.34],
+  "labels": [4.72, 5.0, 5.28, 5.56, 5.84, 6.12, 6.4],
+  "docFly": [5.1, 6.5],
+  "flyThrough": [6.82, 7.2],
+  "wall": [6.96, 10.68],
+  "s2Lines": [7.23, 7.97, 8.4, 9.44, 10.2],
+  "freeze": [10.68, 11.02],
+  "burst": [11.02, 11.2],
+  "resolveStart": 11.2,
+  "s3Words": [11.28, 11.68, 12.285, 12.67],
+  "brand": {
+    "nudge": 13.12,
+    "logo": 13.42,
+    "cta1": 13.75,
+    "cta2": 14.2
+  },
+  "sting": 13.32
+}

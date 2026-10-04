@@ -1,0 +1,12 @@
+{
+  "fps": 30,
+  "seams": [
+    {
+      "id": "mundo-da-divida→resolucao",
+      "cut": 11.2,
+      "technique": "scale-burst (Z push) → bloom e palavras crescendo",
+      "exit": { "selector": "#dw-burst", "axis": "z", "dir": 1 },
+      "entry": { "selector": "#rs-bloom", "axis": "z", "dir": 1, "scanRoot": "#rs-stage" }
+    }
+  ]
+}

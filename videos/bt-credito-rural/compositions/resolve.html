@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <title>BT Crédito Rural: resolução e marca</title>
+  </head>
+  <body>
+    <template id="resolve-template">
+      <style>
+        @font-face {
+          font-family: "BT Bodoni";
+          src: url("assets/fonts/BodoniModa-Variable.woff2") format("woff2");
+          font-weight: 400 900;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: "BT Bodoni";
+          src: url("assets/fonts/BodoniModa-Italic-Variable.woff2") format("woff2");
+          font-weight: 400 900;
+          font-style: italic;
+        }
+        @font-face {
+          font-family: "BT Montserrat";
+          src: url("assets/fonts/Montserrat-Variable.woff2") format("woff2");
+          font-weight: 100 900;
+          font-style: normal;
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          background: #081a35;
+          color: #faf8f4;
+          font-family: "BT Montserrat", sans-serif;
+        }
+        #rs-bg {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(110% 70% at 50% 42%, #10295c 0%, #0b1f4b 42%, #081a35 78%, #050f22 100%);
+        }
+        #rs-contours {
+          position: absolute;
+          left: -160px;
+          top: 260px;
+          width: 1400px;
+          height: 1400px;
+          opacity: 0;
+          transform-origin: 700px 700px;
+        }
+        #rs-contours img {
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+        #rs-field {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1080px;
+          height: 1920px;
+          opacity: 0;
+        }
+        #rs-field-glow {
+          position: absolute;
+          left: -10%;
+          right: -10%;
+          top: 1380px;
+          height: 640px;
+          background: radial-gradient(55% 45% at 50% 30%, rgba(62, 75, 44, 0.55), rgba(62, 75, 44, 0) 75%);
+          opacity: 0;
+        }
+        #rs-bloom {
+          position: absolute;
+          left: 90px;
+          top: 460px;
+          width: 900px;
+          height: 900px;
+          border-radius: 50%;
+          background: radial-gradient(50% 50% at 50% 50%, rgba(250, 248, 244, 0.5), rgba(212, 167, 124, 0.18) 38%, rgba(212, 167, 124, 0) 70%);
+          opacity: 0;
+          transform-origin: 450px 450px;
+        }
+        #rs-stage {
+          position: absolute;
+          inset: 0;
+          transform-origin: 540px 900px;
+        }
+        #rs-head {
+          position: absolute;
+          left: 0;
+          top: 760px;
+          width: 1080px;
+          height: 300px;
+          transform-origin: 540px 150px;
+        }
+        .rs-line {
+          position: absolute;
+          left: 0;
+          width: 1080px;
+          display: flex;
+          justify-content: center;
+          align-items: baseline;
+          gap: 0.26em;
+          white-space: nowrap;
+          font-family: "BT Bodoni", serif;
+          font-weight: 800;
+          font-variation-settings: "opsz" 14;
+          font-size: 96px;
+          line-height: 1;
+          letter-spacing: 0.005em;
+        }
+        #rs-l1 {
+          top: 40px;
+        }
+        #rs-l2 {
+          top: 162px;
+        }
+        .rs-w {
+          display: inline-block;
+          opacity: 0;
+          transform-origin: 50% 60%;
+        }
+        .rs-w.it {
+          font-style: italic;
+        }
+        #rs-dot {
+          display: inline-block;
+          color: #d4a77c;
+          margin-left: -0.24em;
+          opacity: 0;
+          transform-origin: 50% 80%;
+        }
+        #rs-under {
+          position: absolute;
+          left: 556px;
+          top: 276px;
+          width: 330px;
+          height: 3px;
+          background: #d4a77c;
+          transform-origin: 0px 1.5px;
+          opacity: 0;
+        }
+        #rs-divider {
+          position: absolute;
+          left: 480px;
+          top: 724px;
+          width: 120px;
+          height: 2px;
+          background: #d4a77c;
+          transform-origin: 60px 1px;
+          opacity: 0;
+        }
+        #rs-logo {
+          position: absolute;
+          left: 220px;
+          top: 788px;
+          width: 640px;
+          height: 320px;
+          opacity: 0;
+          transform-origin: 320px 160px;
+        }
+        #rs-logo img {
+          width: 100%;
+          height: 100%;
+          display: block;
+          object-fit: contain;
+        }
+        #rs-cta1 {
+          position: absolute;
+          left: 150px;
+          top: 1190px;
+          width: 780px;
+          text-align: center;
+          font-weight: 500;
+          font-size: 44px;
+          line-height: 1.3;
+          color: rgba(250, 248, 244, 0.94);
+          opacity: 0;
+        }
+        #rs-cta2 {
+          position: absolute;
+          left: 0;
+          top: 1352px;
+          width: 1080px;
+          text-align: center;
+          font-weight: 700;
+          font-size: 46px;
+          letter-spacing: 0.04em;
+          color: #d4a77c;
+          opacity: 0;
+        }
+        #rs-cta2-under {
+          position: absolute;
+          left: 360px;
+          top: 1420px;
+          width: 360px;
+          height: 2px;
+          background: rgba(212, 167, 124, 0.7);
+          transform-origin: 180px 1px;
+          opacity: 0;
+        }
+        #rs-vignette {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(90% 72% at 50% 46%, rgba(0, 0, 0, 0) 58%, rgba(2, 6, 16, 0.6) 100%);
+        }
+        #rs-grain {
+          position: absolute;
+          inset: -64px;
+          background-image: url("assets/textures/grain.png");
+          background-size: 512px 512px;
+          mix-blend-mode: overlay;
+          opacity: 0.07;
+        }
+      </style>
+
+      <div data-hf-id="hf-klf4" id="root" data-composition-id="resolve" data-width="1080" data-height="1920" data-duration="4.3">
+        <div data-hf-id="hf-mrng" id="rs-bg"></div>
+        <div data-hf-id="hf-apxw" id="rs-contours"><img data-hf-id="hf-0wnq" src="assets/textures/contours.svg" alt=""></div>
+        <div data-hf-id="hf-1tc4" id="rs-field-glow" data-layout-ignore=""></div>
+        <canvas data-hf-id="hf-brdm" id="rs-field" width="1080" height="1920"></canvas>
+        <div data-hf-id="hf-qbba" id="rs-bloom"></div>
+        <div data-hf-id="hf-rx47" id="rs-vignette"></div>
+        <div data-hf-id="hf-xeh9" id="rs-stage">
+          <div data-hf-id="hf-y0fn" id="rs-head">
+            <div data-hf-id="hf-2lb9" class="rs-line" id="rs-l1"><span data-hf-id="hf-ts2e" class="rs-w" id="rs-w1">CRÉDITO</span><span data-hf-id="hf-wb1d" class="rs-w" id="rs-w2">RURAL</span></div>
+            <div data-hf-id="hf-6jfa" class="rs-line" id="rs-l2"><span data-hf-id="hf-saxe" class="rs-w" id="rs-w3">EXIGE</span><span data-hf-id="hf-ckg1" class="rs-w it" id="rs-w4">ANÁLISE</span><span data-hf-id="hf-4fdh" id="rs-dot">.</span></div>
+            <div data-hf-id="hf-gvh9" id="rs-under"></div>
+          </div>
+          <div data-hf-id="hf-gzjs" id="rs-divider"></div>
+          <div data-hf-id="hf-1kzw" id="rs-logo"><img data-hf-id="hf-8ijp" src="assets/brand/bt-logo-white.png" alt="Bispo & Teixeira Advogados"></div>
+          <div data-hf-id="hf-nv4v" id="rs-cta1">Está enfrentando dificuldades com seu crédito rural?</div>
+          <div data-hf-id="hf-foz5" id="rs-cta2">Fale com nossa equipe.</div>
+          <div data-hf-id="hf-toew" id="rs-cta2-under"></div>
+        </div>
+        <div data-hf-id="hf-9kom" id="rs-grain"></div>
+      </div>
+
+      <script>
+        (function () {
+          // Tempo local (a cena comeca em 11,20 s do filme). Espelha scripts/timeline.json.
+          const T = {
+            words: [0.08, 0.48, 1.085, 1.47],
+            nudge: 1.92,
+            logo: 2.22,
+            cta1: 2.55,
+            cta2: 3.0,
+            end: 4.3,
+          };
+          const $ = (id) => document.getElementById(id);
+          function hash(n) {
+            let x = Math.imul(n | 0, 0x27d4eb2d) ^ 0x165667b1;
+            x = Math.imul(x ^ (x >>> 15), 0x85ebca6b);
+            x = Math.imul(x ^ (x >>> 13), 0xc2b2ae35);
+            x ^= x >>> 16;
+            return (x >>> 0) / 4294967295;
+          }
+
+          // lavoura calma ao pe da tela (eco da abertura, agora sob controle)
+          const fieldCtx = $("rs-field").getContext("2d");
+          function drawField(t) {
+            window.BTField.draw(fieldCtx, {
+              pos: 3 + 0.55 * t,
+              vel: 0.55,
+              hy: 1500,
+              camH: 0.82,
+              camX: 0.12 * Math.sin(t * 0.6),
+              fade: 1,
+              press: 0,
+              glow: [212, 167, 124],
+              glowA: 0.24,
+              particles: false,
+            });
+          }
+
+          const grainEl = $("rs-grain");
+          const P = { t: 0 };
+          function frame(t) {
+            drawField(t);
+            const f = Math.floor(t * 30);
+            grainEl.style.backgroundPosition = `${Math.floor(hash(f * 5 + 11) * 512)}px ${Math.floor(hash(f * 5 + 12) * 512)}px`;
+          }
+
+          const tl = gsap.timeline({ paused: true });
+          tl.to(P, { t: T.end, duration: T.end, ease: "none", onUpdate: () => frame(P.t) }, 0);
+
+          // impacto limpo: bloom dourado e fundo institucional
+          tl.fromTo("#rs-bloom", { opacity: 0.9, scale: 0.55 }, { opacity: 0, scale: 1.7, duration: 0.75, ease: "power2.out" }, 0);
+          tl.fromTo("#rs-contours", { opacity: 0, scale: 0.9, rotation: 4 }, { opacity: 0.09, scale: 1.0, rotation: 0, duration: 1.2, ease: "power2.out" }, 0);
+          tl.to("#rs-contours", { scale: 1.05, rotation: -2, duration: T.end - 1.2, ease: "sine.inOut" }, 1.2);
+          tl.fromTo("#rs-field-glow", { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "sine.inOut" }, 0.2);
+          tl.fromTo("#rs-field", { opacity: 0, y: 60 }, { opacity: 0.72, y: 0, duration: 1.2, ease: "power2.out" }, 0.25);
+
+          // CRÉDITO RURAL EXIGE ANÁLISE. palavra por palavra, sincronizado com a voz
+          const ids = ["#rs-w1", "#rs-w2", "#rs-w3", "#rs-w4"];
+          ids.forEach((sel, k) => {
+            tl.fromTo(sel, { opacity: 0, scale: 0.84, y: 18, filter: "blur(10px)" }, { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 0.32, ease: "power3.out" }, T.words[k]);
+          });
+          tl.fromTo("#rs-dot", { opacity: 0, scale: 1.2 }, { opacity: 1, scale: 1, duration: 0.28, ease: "back.out(1.6)" }, T.words[3] + 0.16);
+          tl.fromTo("#rs-under", { opacity: 1, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: 0.42, ease: "power3.out" }, T.words[3] + 0.12);
+
+          // a tensao se desfaz: o titulo sobe e abre espaco para a marca
+          tl.to("#rs-head", { y: -322, scale: 0.78, duration: 0.56, ease: "power3.inOut" }, T.nudge);
+          tl.fromTo("#rs-logo", { opacity: 0, y: 90, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, T.logo);
+          tl.fromTo("#rs-divider", { opacity: 1, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: 0.5, ease: "power3.out" }, T.logo + 0.1);
+          tl.fromTo("#rs-cta1", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, T.cta1);
+          tl.fromTo("#rs-cta2", { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, T.cta2);
+          tl.fromTo("#rs-cta2-under", { opacity: 1, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: 0.5, ease: "power3.out" }, T.cta2 + 0.14);
+
+          // camera com intencao: aproximacao lenta e continua ate o fim
+          tl.fromTo("#rs-stage", { scale: 0.965 }, { scale: 1, duration: 1.4, ease: "power2.out" }, 0);
+          tl.to("#rs-stage", { scale: 1.022, duration: T.end - 2.6, ease: "sine.inOut" }, 2.6);
+
+          frame(0);
+          window.__timelines["resolve"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "mix_lufs": -14.0,
+  "mix_peak_db": -1.2,
+  "vo_gain_db": 2.72,
+  "bus_max_reduction_db": -3.49,
+  "speech_vs_music_lu": 10.45,
+  "music_peak_db": -7.38,
+  "sfx_peak_db": -1.17,
+  "freeze_rms_db": -25.4
+}

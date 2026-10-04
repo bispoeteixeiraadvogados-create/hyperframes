@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <title>BT Crédito Rural: mundo da dívida</title>
+  </head>
+  <body>
+    <template id="debt-world-template">
+      <style>
+        @font-face {
+          font-family: "BT Bodoni";
+          src: url("assets/fonts/BodoniModa-Variable.woff2") format("woff2");
+          font-weight: 400 900;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: "BT Bodoni";
+          src: url("assets/fonts/BodoniModa-Italic-Variable.woff2") format("woff2");
+          font-weight: 400 900;
+          font-style: italic;
+        }
+        @font-face {
+          font-family: "BT Montserrat";
+          src: url("assets/fonts/Montserrat-Variable.woff2") format("woff2");
+          font-weight: 100 900;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: "BT Inter";
+          src: url("assets/fonts/Inter-Variable.woff2") format("woff2");
+          font-weight: 100 900;
+          font-style: normal;
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          background: #081a35;
+          color: #faf8f4;
+          font-family: "BT Montserrat", sans-serif;
+        }
+        #dw-bg {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(120% 70% at 50% 58%, #10295c 0%, #0b1f4b 38%, #081a35 70%, #050f22 100%);
+        }
+        #dw-sky-red {
+          position: absolute;
+          left: -10%;
+          right: -10%;
+          top: 640px;
+          height: 1000px;
+          background: radial-gradient(60% 50% at 50% 50%, rgba(196, 32, 44, 0.42), rgba(196, 32, 44, 0) 72%);
+          opacity: 0;
+        }
+        #dw-burst,
+        #dw-cam,
+        #dw-shake {
+          position: absolute;
+          inset: 0;
+          transform-origin: 540px 900px;
+        }
+        #dw-field {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1080px;
+          height: 1920px;
+        }
+        #dw-contours {
+          position: absolute;
+          left: -160px;
+          top: 260px;
+          width: 1400px;
+          height: 1400px;
+          opacity: 0;
+          transform-origin: 700px 700px;
+        }
+        #dw-contours img {
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+
+        /* microdados financeiros, recuados atras do numero por mascara radial */
+        #dw-cols {
+          position: absolute;
+          inset: 0;
+          opacity: 0;
+          -webkit-mask-image: radial-gradient(70% 34% at 50% 46%, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.25) 55%, #000 100%);
+          mask-image: radial-gradient(70% 34% at 50% 46%, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.25) 55%, #000 100%);
+        }
+        .dw-col {
+          position: absolute;
+          top: 120px;
+          width: 176px;
+          font-family: "BT Inter", sans-serif;
+          font-weight: 500;
+          font-size: 22px;
+          line-height: 44px;
+          font-variant-numeric: tabular-nums;
+          color: rgba(250, 248, 244, 0.85);
+          letter-spacing: 0.02em;
+          text-align: right;
+        }
+        .dw-col span {
+          display: block;
+        }
+        .dw-col span.up {
+          color: #d4a77c;
+        }
+        .dw-col span.hot {
+          color: #e5333f;
+        }
+
+        #dw-lines {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: visible;
+          filter: drop-shadow(0 0 10px rgba(229, 51, 63, 0.55));
+        }
+        #dw-lines path {
+          fill: none;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        /* documento: cedula de credito rural */
+        #dw-doc {
+          position: absolute;
+          left: 250px;
+          top: 560px;
+          width: 580px;
+          height: 760px;
+          background: #f4ede2;
+          border-radius: 6px;
+          box-shadow: 0 40px 90px rgba(0, 0, 0, 0.45);
+          color: #0b1f4b;
+          padding: 56px 52px;
+          box-sizing: border-box;
+          opacity: 0;
+          overflow: hidden;
+          z-index: 1;
+        }
+        #dw-doc .doc-grain {
+          position: absolute;
+          inset: 0;
+          background-image: url("assets/textures/grain.png");
+          opacity: 0.08;
+          mix-blend-mode: multiply;
+        }
+        #dw-doc .doc-kicker {
+          font-weight: 600;
+          font-size: 17px;
+          letter-spacing: 0.3em;
+          color: #8a6d4f;
+        }
+        #dw-doc .doc-title {
+          margin-top: 14px;
+          font-family: "BT Bodoni", serif;
+          font-weight: 700;
+          font-variation-settings: "opsz" 28;
+          font-size: 44px;
+          line-height: 1.05;
+        }
+        #dw-doc .doc-rule {
+          margin: 26px 0 22px;
+          height: 2px;
+          background: #0b1f4b;
+          opacity: 0.85;
+        }
+        #dw-doc .doc-bars div {
+          height: 9px;
+          margin: 11px 0;
+          background: rgba(11, 31, 75, 0.16);
+          border-radius: 4px;
+        }
+        #dw-doc .doc-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          font-family: "BT Inter", sans-serif;
+          font-variant-numeric: tabular-nums;
+          font-size: 25px;
+          font-weight: 500;
+          padding: 13px 0;
+          border-bottom: 1px solid rgba(11, 31, 75, 0.18);
+        }
+        #dw-doc .doc-row b {
+          font-weight: 700;
+        }
+        #dw-doc .doc-row.total {
+          border-bottom: none;
+          color: #c4202c;
+          font-size: 29px;
+          padding-top: 20px;
+        }
+        #dw-doc .doc-stamp {
+          position: absolute;
+          right: 40px;
+          bottom: 58px;
+          border: 5px solid #c4202c;
+          color: #c4202c;
+          font-family: "BT Montserrat", sans-serif;
+          font-weight: 800;
+          font-size: 40px;
+          letter-spacing: 0.18em;
+          padding: 6px 18px 6px 24px;
+          border-radius: 6px;
+          opacity: 0.85;
+          transform: rotate(-9deg);
+        }
+
+        /* heroi: o numero */
+        #dw-hero {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+        }
+        #dw-tags,
+        #dw-wall {
+          z-index: 4;
+        }
+        #dw-label {
+          position: absolute;
+          left: 192px;
+          top: 688px;
+          font-weight: 600;
+          font-size: 24px;
+          letter-spacing: 0.32em;
+          color: rgba(250, 248, 244, 0.8);
+          opacity: 0;
+        }
+        #dw-frame {
+          position: absolute;
+          left: 190px;
+          top: 735px;
+          width: 700px;
+          height: 290px;
+          transform-origin: 350px 145px;
+        }
+        #dw-frame .edge {
+          position: absolute;
+          background: #d4a77c;
+        }
+        #dw-frame .e-top {
+          left: 0;
+          top: 0;
+          width: 700px;
+          height: 2px;
+          transform-origin: 350px 1px;
+        }
+        #dw-frame .e-bottom {
+          left: 0;
+          top: 288px;
+          width: 700px;
+          height: 2px;
+          transform-origin: 350px 1px;
+        }
+        #dw-frame .e-left {
+          left: 0;
+          top: 0;
+          width: 2px;
+          height: 290px;
+          transform-origin: 1px 145px;
+        }
+        #dw-frame .e-right {
+          left: 698px;
+          top: 0;
+          width: 2px;
+          height: 290px;
+          transform-origin: 1px 145px;
+        }
+        #dw-frame .corner {
+          position: absolute;
+          width: 26px;
+          height: 26px;
+          border-color: #faf8f4;
+          border-style: solid;
+          border-width: 0;
+        }
+        #dw-frame .c-tl {
+          left: -12px;
+          top: -12px;
+          border-left-width: 3px;
+          border-top-width: 3px;
+        }
+        #dw-frame .c-tr {
+          left: 686px;
+          top: -12px;
+          border-right-width: 3px;
+          border-top-width: 3px;
+        }
+        #dw-frame .c-bl {
+          left: -12px;
+          top: 276px;
+          border-left-width: 3px;
+          border-bottom-width: 3px;
+        }
+        #dw-frame .c-br {
+          left: 686px;
+          top: 276px;
+          border-right-width: 3px;
+          border-bottom-width: 3px;
+        }
+        #dw-frame-glow {
+          position: absolute;
+          left: 190px;
+          top: 735px;
+          width: 700px;
+          height: 290px;
+          box-shadow:
+            0 0 0 2px rgba(212, 167, 124, 0.95),
+            0 0 40px 8px rgba(212, 167, 124, 0.55);
+          opacity: 0;
+          transform-origin: 350px 145px;
+        }
+        #dw-numbox {
+          position: absolute;
+          left: 0;
+          top: 735px;
+          width: 1080px;
+          height: 290px;
+        }
+        .numtxt {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          white-space: nowrap;
+          font-family: "BT Bodoni", serif;
+          font-weight: 800;
+          font-variation-settings: "opsz" 60;
+          font-size: 300px;
+          line-height: 1;
+          letter-spacing: -0.025em;
+          font-variant-numeric: tabular-nums lining-nums;
+          font-feature-settings: "tnum" 1;
+          transform-origin: 540px 145px;
+        }
+        .numtxt .cur {
+          align-self: flex-start;
+          margin-top: 36px;
+          margin-right: 26px;
+          font-size: 104px;
+          font-weight: 700;
+          font-variation-settings: "opsz" 30;
+          letter-spacing: 0;
+        }
+        #dw-num {
+          color: #faf8f4;
+          opacity: 0;
+        }
+        #dw-cur {
+          color: #d4a77c;
+        }
+        #dw-num-glow {
+          position: absolute;
+          left: 90px;
+          top: 610px;
+          width: 900px;
+          height: 540px;
+          background: radial-gradient(50% 50% at 50% 50%, rgba(229, 51, 63, 0.5), rgba(229, 51, 63, 0) 70%);
+          opacity: 0;
+          transform-origin: 450px 270px;
+        }
+        .echo {
+          color: transparent;
+          -webkit-text-stroke: 3px #d4a77c;
+          opacity: 0;
+        }
+        .echo.red {
+          -webkit-text-stroke: 3px #e5333f;
+        }
+        .ring {
+          position: absolute;
+          left: 340px;
+          top: 680px;
+          width: 400px;
+          height: 400px;
+          border-radius: 50%;
+          border: 3px solid #d4a77c;
+          opacity: 0;
+          transform-origin: 200px 200px;
+        }
+        .ring.red {
+          border-color: #e5333f;
+        }
+        #dw-delta {
+          position: absolute;
+          left: 530px;
+          top: 1052px;
+          width: 360px;
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          gap: 14px;
+          font-family: "BT Inter", sans-serif;
+          font-weight: 600;
+          font-size: 38px;
+          font-variant-numeric: tabular-nums;
+          color: #d4a77c;
+          opacity: 0;
+          transform-origin: 360px 24px;
+        }
+        #dw-delta .tri {
+          width: 0;
+          height: 0;
+          border-left: 13px solid transparent;
+          border-right: 13px solid transparent;
+          border-bottom: 22px solid currentColor;
+        }
+
+        /* rotulos: o que faz a divida crescer */
+        #dw-tags {
+          position: absolute;
+          inset: 0;
+        }
+        .tag {
+          position: absolute;
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          font-weight: 800;
+          letter-spacing: 0.12em;
+          color: #faf8f4;
+          white-space: nowrap;
+          opacity: 0;
+          text-shadow: 0 4px 18px rgba(5, 12, 28, 0.75);
+        }
+        .tag .tri {
+          width: 0;
+          height: 0;
+          border-left: 0.3em solid transparent;
+          border-right: 0.3em solid transparent;
+          border-bottom: 0.5em solid #e5333f;
+        }
+        .tag.red {
+          color: #e5333f;
+        }
+        .tag.red .tri {
+          border-bottom-color: #faf8f4;
+        }
+
+        /* parede de numeros */
+        #dw-wall {
+          position: absolute;
+          inset: 0;
+          transform-origin: 540px 960px;
+          opacity: 0;
+        }
+        .wall-plane {
+          position: absolute;
+          left: -400px;
+          width: 1880px;
+          transform-origin: 940px 960px;
+        }
+        .wall-row {
+          white-space: nowrap;
+          font-family: "BT Bodoni", serif;
+          font-weight: 800;
+          font-variation-settings: "opsz" 48;
+          letter-spacing: -0.02em;
+          font-variant-numeric: tabular-nums lining-nums;
+          line-height: 1;
+        }
+        .wall-row.solid {
+          color: rgba(250, 248, 244, 0.86);
+        }
+        .wall-row.line {
+          color: transparent;
+          -webkit-text-stroke: 2px rgba(250, 248, 244, 0.7);
+        }
+        .wall-row.red {
+          color: #e5333f;
+        }
+        .wall-row.dim {
+          color: rgba(250, 248, 244, 0.28);
+        }
+        #wall-far .wall-row {
+          font-family: "BT Inter", sans-serif;
+          font-weight: 600;
+          font-size: 54px;
+          line-height: 74px;
+          letter-spacing: 0.02em;
+        }
+        #wall-mid .wall-row {
+          font-size: 150px;
+          line-height: 168px;
+        }
+        #wall-mid2 .wall-row {
+          font-size: 210px;
+          line-height: 226px;
+        }
+        .wall-near {
+          position: absolute;
+          left: 0;
+          top: 760px;
+          width: 1080px;
+          height: 400px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          white-space: nowrap;
+          font-family: "BT Bodoni", serif;
+          font-weight: 900;
+          font-variation-settings: "opsz" 60;
+          font-size: 420px;
+          line-height: 1;
+          letter-spacing: -0.03em;
+          font-variant-numeric: tabular-nums lining-nums;
+          color: #faf8f4;
+          opacity: 0;
+          transform-origin: 540px 200px;
+        }
+        .wall-near.red {
+          color: #e5333f;
+        }
+
+        /* texto cinetico: frase 1 */
+        #dw-text {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1080px;
+          height: 1920px;
+        }
+        .frag {
+          position: absolute;
+          left: 0;
+          width: 1080px;
+          text-align: center;
+          white-space: nowrap;
+          opacity: 0;
+          transform-origin: 540px 50%;
+          text-shadow: 0 6px 30px rgba(5, 12, 28, 0.6);
+        }
+        .frag.small {
+          font-weight: 600;
+          font-size: 50px;
+          letter-spacing: 0.12em;
+          color: rgba(250, 248, 244, 0.92);
+        }
+        .frag.big {
+          font-weight: 800;
+          font-size: 100px;
+          letter-spacing: 0.04em;
+          line-height: 1;
+        }
+        .frag.serif {
+          font-family: "BT Bodoni", serif;
+          font-style: italic;
+          font-weight: 800;
+          font-variation-settings: "opsz" 48;
+          font-size: 136px;
+          line-height: 1;
+          letter-spacing: -0.01em;
+          color: #d4a77c;
+        }
+        .frag.gold {
+          font-weight: 800;
+          font-size: 66px;
+          letter-spacing: 0.06em;
+          line-height: 1;
+          color: #d4a77c;
+        }
+
+        /* frase 2 sobre a parede */
+        #dw-s2 {
+          position: absolute;
+          inset: 0;
+        }
+        #dw-s2-band {
+          position: absolute;
+          left: 0;
+          top: 590px;
+          width: 1080px;
+          height: 860px;
+          background: linear-gradient(
+            to bottom,
+            rgba(5, 12, 28, 0) 0%,
+            rgba(5, 12, 28, 0.9) 11%,
+            rgba(5, 12, 28, 0.9) 89%,
+            rgba(5, 12, 28, 0) 100%
+          );
+          opacity: 0;
+        }
+        .s2 {
+          position: absolute;
+          left: 0;
+          width: 1080px;
+          text-align: center;
+          white-space: nowrap;
+          line-height: 1;
+          opacity: 0;
+          transform-origin: 540px 50%;
+          text-shadow: 0 6px 28px rgba(5, 12, 28, 0.95);
+        }
+        .s2.sans {
+          font-weight: 800;
+          font-size: 64px;
+          letter-spacing: 0.07em;
+          color: #faf8f4;
+        }
+        .s2.serif {
+          font-family: "BT Bodoni", serif;
+          font-style: italic;
+          font-weight: 800;
+          font-variation-settings: "opsz" 48;
+          font-size: 150px;
+          letter-spacing: -0.01em;
+          color: #faf8f4;
+        }
+        .s2.alert {
+          font-family: "BT Bodoni", serif;
+          font-weight: 900;
+          font-variation-settings: "opsz" 48;
+          font-size: 152px;
+          letter-spacing: -0.01em;
+          color: #e5333f;
+        }
+        #dw-s2-under {
+          position: absolute;
+          left: 340px;
+          top: 958px;
+          width: 400px;
+          height: 3px;
+          background: #d4a77c;
+          transform-origin: 200px 1.5px;
+          opacity: 0;
+        }
+
+        /* efeitos de tela */
+        #dw-world-fx {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+        }
+        #dw-fx {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+        }
+        #fx-vignette {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(85% 70% at 50% 48%, rgba(0, 0, 0, 0) 55%, rgba(2, 6, 16, 1) 100%);
+          opacity: 0.58;
+        }
+        #fx-redvig {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(80% 66% at 50% 50%, rgba(122, 14, 24, 0) 42%, rgba(176, 14, 30, 1) 100%);
+          opacity: 0;
+        }
+        #fx-red {
+          position: absolute;
+          inset: 0;
+          background: #e5333f;
+          mix-blend-mode: multiply;
+          opacity: 0;
+        }
+        #fx-white {
+          position: absolute;
+          inset: 0;
+          background: #faf8f4;
+          opacity: 0;
+        }
+        #fx-grain {
+          position: absolute;
+          inset: -64px;
+          background-image: url("assets/textures/grain.png");
+          background-size: 512px 512px;
+          mix-blend-mode: overlay;
+          opacity: 0.075;
+        }
+      </style>
+
+      <div data-hf-id="hf-rfft" id="root" data-composition-id="debt-world" data-width="1080" data-height="1920" data-duration="11.2">
+        <div data-hf-id="hf-mm0i" id="dw-bg"></div>
+        <div data-hf-id="hf-jiyh" id="dw-sky-red" data-layout-ignore=""></div>
+
+        <div data-hf-id="hf-58sr" id="dw-burst">
+          <div data-hf-id="hf-4bt8" id="dw-cam">
+            <div data-hf-id="hf-7vev" id="dw-shake">
+              <canvas data-hf-id="hf-kmsg" id="dw-field" width="1080" height="1920"></canvas>
+              <div data-hf-id="hf-qqde" id="dw-contours"><img data-hf-id="hf-0wnq" src="assets/textures/contours.svg" alt=""></div>
+              <div data-hf-id="hf-2225" id="dw-cols" data-layout-ignore=""></div>
+              <svg data-hf-id="hf-4ixt" id="dw-lines" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+                <path data-hf-id="hf-jv9j" id="dw-line1" stroke="#e5333f" stroke-width="5" d="" />
+                <path data-hf-id="hf-v540" id="dw-line2" stroke="rgba(250,248,244,0.75)" stroke-width="3" d="" />
+                <path data-hf-id="hf-5o0z" id="dw-line3" stroke="#e5333f" stroke-width="3" d="" />
+              </svg>
+
+              <div data-hf-id="hf-1ba6" id="dw-doc" data-layout-ignore="">
+                <div data-hf-id="hf-yz88" class="doc-grain"></div>
+                <div data-hf-id="hf-zy86" class="doc-kicker">CRÉDITO RURAL</div>
+                <div data-hf-id="hf-77aw" class="doc-title">Cédula de Crédito Rural</div>
+                <div data-hf-id="hf-8p6t" class="doc-rule"></div>
+                <div data-hf-id="hf-51yl" class="doc-bars"><div data-hf-id="hf-xo81" style="width: 92%"></div><div data-hf-id="hf-j6xt" style="width: 78%"></div><div data-hf-id="hf-lgwh" style="width: 85%"></div></div>
+                <div data-hf-id="hf-wihp" class="doc-row"><span data-hf-id="hf-vayl">Principal</span><b data-hf-id="hf-b7n2">R$ 10.000,00</b></div>
+                <div data-hf-id="hf-y2ep" class="doc-row"><span data-hf-id="hf-brys">Juros</span><b data-hf-id="hf-pw46">R$ 4.870,00</b></div>
+                <div data-hf-id="hf-z9bs" class="doc-row"><span data-hf-id="hf-1a9b">Encargos</span><b data-hf-id="hf-caey">R$ 3.110,00</b></div>
+                <div data-hf-id="hf-yv0r" class="doc-row"><span data-hf-id="hf-mmx6">Mora e multa</span><b data-hf-id="hf-i6s0">R$ 4.410,00</b></div>
+                <div data-hf-id="hf-na4v" class="doc-row total"><span data-hf-id="hf-b3r1">Saldo devedor</span><b data-hf-id="hf-muk5">R$ 22.390,00</b></div>
+                <div data-hf-id="hf-6sq4" class="doc-stamp">VENCIDO</div>
+              </div>
+
+              <div data-hf-id="hf-2se3" id="dw-hero">
+                <div data-hf-id="hf-0pu5" id="dw-num-glow"></div>
+                <div data-hf-id="hf-y8hv" id="dw-label">SALDO DEVEDOR</div>
+                <div data-hf-id="hf-ajzc" id="dw-frame-glow"></div>
+                <div data-hf-id="hf-ztu2" id="dw-frame">
+                  <div data-hf-id="hf-zz0o" class="edge e-top"></div>
+                  <div data-hf-id="hf-nqhm" class="edge e-bottom"></div>
+                  <div data-hf-id="hf-6o3g" class="edge e-left"></div>
+                  <div data-hf-id="hf-03v7" class="edge e-right"></div>
+                  <div data-hf-id="hf-k8a1" class="corner c-tl"></div>
+                  <div data-hf-id="hf-o2wn" class="corner c-tr"></div>
+                  <div data-hf-id="hf-7tr3" class="corner c-bl"></div>
+                  <div data-hf-id="hf-p1xd" class="corner c-br"></div>
+                </div>
+                <div data-hf-id="hf-0lsj" class="ring" id="dw-ring1"></div>
+                <div data-hf-id="hf-rxwo" class="ring" id="dw-ring2"></div>
+                <div data-hf-id="hf-n7rw" class="ring red" id="dw-ring3"></div>
+                <div data-hf-id="hf-ap9f" class="ring red" id="dw-ring4"></div>
+                <div data-hf-id="hf-wjc4" id="dw-numbox">
+                  <div data-hf-id="hf-ughp" class="numtxt echo" id="dw-echo1"><span data-hf-id="hf-pcy7" class="cur">R$</span><span data-hf-id="hf-koav">11.200</span></div>
+                  <div data-hf-id="hf-2gku" class="numtxt echo" id="dw-echo2"><span data-hf-id="hf-0g6n" class="cur">R$</span><span data-hf-id="hf-b18z">13.480</span></div>
+                  <div data-hf-id="hf-dw5m" class="numtxt echo red" id="dw-echo3"><span data-hf-id="hf-01vm" class="cur">R$</span><span data-hf-id="hf-cwo9">17.640</span></div>
+                  <div data-hf-id="hf-xc1p" class="numtxt echo red" id="dw-echo4"><span data-hf-id="hf-znkl" class="cur">R$</span><span data-hf-id="hf-traz">22.390</span></div>
+                  <div data-hf-id="hf-bxde" class="numtxt" id="dw-num"><span data-hf-id="hf-6np3" class="cur" id="dw-cur">R$</span><span data-hf-id="hf-gl67" id="dw-digits">10.000</span></div>
+                </div>
+                <div data-hf-id="hf-svaj" id="dw-delta"><span data-hf-id="hf-mt3k" class="tri"></span><span data-hf-id="hf-lbsd" id="dw-delta-val">0,0%</span></div>
+              </div>
+
+              <div data-hf-id="hf-f07k" id="dw-tags">
+                <div data-hf-id="hf-7z8o" class="tag" id="dw-tag0" style="left: 96px; top: 300px; font-size: 48px"><span data-hf-id="hf-iieg" class="tri"></span>JUROS</div>
+                <div data-hf-id="hf-rkw7" class="tag red" id="dw-tag1" style="left: 560px; top: 1480px; font-size: 42px"><span data-hf-id="hf-hbhd" class="tri"></span>ENCARGOS</div>
+                <div data-hf-id="hf-3mnf" class="tag" id="dw-tag2" style="left: 640px; top: 430px; font-size: 40px"><span data-hf-id="hf-hpse" class="tri"></span>MULTA</div>
+                <div data-hf-id="hf-hw7r" class="tag red" id="dw-tag3" style="left: 112px; top: 1420px; font-size: 46px"><span data-hf-id="hf-givb" class="tri"></span>MORA</div>
+                <div data-hf-id="hf-vbj9" class="tag" id="dw-tag4" style="left: 600px; top: 250px; font-size: 34px"><span data-hf-id="hf-gx6c" class="tri"></span>CORREÇÃO</div>
+                <div data-hf-id="hf-5esm" class="tag red" id="dw-tag5" style="left: 300px; top: 1600px; font-size: 40px"><span data-hf-id="hf-fq99" class="tri"></span>CAPITALIZAÇÃO</div>
+                <div data-hf-id="hf-p32e" class="tag" id="dw-tag6" style="left: 128px; top: 480px; font-size: 36px"><span data-hf-id="hf-g4ka" class="tri"></span>TAXAS</div>
+              </div>
+
+              <div data-hf-id="hf-hbhc" id="dw-wall" data-layout-ignore="">
+                <div data-hf-id="hf-0gem" class="wall-plane" id="wall-far" data-layout-ignore=""></div>
+                <div data-hf-id="hf-an9v" class="wall-plane" id="wall-mid" data-layout-ignore=""></div>
+                <div data-hf-id="hf-ia7n" class="wall-plane" id="wall-mid2" data-layout-ignore=""></div>
+                <div data-hf-id="hf-5gs8" class="wall-near" id="wall-near1">R$ 31.870</div>
+                <div data-hf-id="hf-47m8" class="wall-near red" id="wall-near2">38.204</div>
+                <div data-hf-id="hf-asuy" class="wall-near" id="wall-near3">R$ 46.115</div>
+              </div>
+            </div>
+          </div>
+
+          <div data-hf-id="hf-rik4" id="dw-world-fx">
+            <div data-hf-id="hf-l0cd" id="fx-redvig"></div>
+            <div data-hf-id="hf-etuq" id="fx-vignette"></div>
+          </div>
+
+          <div data-hf-id="hf-mwkq" id="dw-text">
+            <div data-hf-id="hf-80gr" class="frag small" id="dw-fa1" style="top: 452px">QUANDO A DÍVIDA</div>
+            <div data-hf-id="hf-fd7s" class="frag big" id="dw-fa2" style="top: 526px">CRESCE</div>
+            <div data-hf-id="hf-62wr" class="frag small" id="dw-fb1" style="top: 396px">MAIS</div>
+            <div data-hf-id="hf-2r9o" class="frag serif" id="dw-fb2" style="top: 494px">rápido</div>
+            <div data-hf-id="hf-itq4" class="frag small" id="dw-fc1" style="top: 400px">QUE SUA</div>
+            <div data-hf-id="hf-2k3w" class="frag gold" id="dw-fc2" style="top: 474px">CAPACIDADE</div>
+            <div data-hf-id="hf-lf4u" class="frag gold" id="dw-fc3" style="top: 556px">DE PAGAMENTO</div>
+          </div>
+
+          <div data-hf-id="hf-j4c0" id="dw-s2">
+            <div data-hf-id="hf-9fiw" id="dw-s2-band"></div>
+            <div data-hf-id="hf-3xfe" class="s2 sans" id="dw-s2a" style="top: 690px">É PRECISO</div>
+            <div data-hf-id="hf-lxot" class="s2 serif" id="dw-s2b" style="top: 792px">entender</div>
+            <div data-hf-id="hf-ybdt" id="dw-s2-under"></div>
+            <div data-hf-id="hf-x6jo" class="s2 sans" id="dw-s2c" style="top: 1000px">O QUE ESTÁ FAZENDO</div>
+            <div data-hf-id="hf-zukl" class="s2 sans" id="dw-s2d" style="top: 1090px">ESSA DÍVIDA</div>
+            <div data-hf-id="hf-tdhq" class="s2 alert" id="dw-s2e" style="top: 1206px">CRESCER.</div>
+          </div>
+        </div>
+
+        <div data-hf-id="hf-odsx" id="dw-fx">
+          <div data-hf-id="hf-gruh" id="fx-red"></div>
+          <div data-hf-id="hf-kk6j" id="fx-white"></div>
+          <div data-hf-id="hf-0ap1" id="fx-grain"></div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          // ----------------------------------------------------------------- relogio
+          // Espelha scripts/timeline.json (tempo absoluto = tempo local, a cena comeca em 0).
+          const T = {
+            b: [0.56, 1.68, 2.69, 3.43, 4.41],
+            vals: [10000, 11200, 13480, 17640, 22390],
+            pct: [0, 12.0, 34.8, 76.4, 123.9],
+            roll: [0, 0.2, 0.2, 0.2, 0.11],
+            cresce: 1.0,
+            fa1: 0.3,
+            fb1: 1.45,
+            fc1: 2.09,
+            fc3: 3.33,
+            labels: [4.72, 5.0, 5.28, 5.56, 5.84, 6.12, 6.4],
+            doc: [5.1, 6.5],
+            fly: [6.82, 7.2],
+            wall: [6.96, 10.68],
+            s2: [7.23, 7.97, 8.4, 9.44, 10.2],
+            freeze: 10.68,
+            burst: [11.02, 11.2],
+            end: 11.2,
+          };
+          const RED = "#e5333f";
+          const $ = (id) => document.getElementById(id);
+          const hash = window.BTField.hash;
+          const smooth = window.BTField.smooth;
+          const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+          const easeOutCubic = (u) => 1 - Math.pow(1 - clamp(u, 0, 1), 3);
+          const easeInOut = (u) => {
+            u = clamp(u, 0, 1);
+            return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+          };
+          function prng(seed) {
+            let a = seed >>> 0;
+            return function () {
+              a = (a + 0x6d2b79f5) >>> 0;
+              let t = Math.imul(a ^ (a >>> 15), 1 | a);
+              t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+              return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+            };
+          }
+          const fmt = (v) => Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+          const fmtPct = (v) => v.toFixed(1).replace(".", ",") + "%";
+
+          // ----------------------------------------------------------------- camera sobre a lavoura
+          const canvas = $("dw-field");
+          const ctx = canvas.getContext("2d");
+          function fieldPos(t) {
+            let p = 70 * 0.16 * (1 - Math.exp(-t / 0.16)) + 1.15 * t;
+            const burst = [0, 4.5, 6.5, 8.5, 14];
+            for (let k = 1; k < 5; k++) {
+              const b = T.b[k];
+              if (t > b) p += burst[k] * 0.28 * (1 - Math.exp(-(t - b) / 0.28));
+            }
+            if (t > T.b[4]) {
+              const u = t - T.b[4];
+              p += (0.98 * u * u) / 2;
+            }
+            return p;
+          }
+          const camHeight = (t) => 0.52 + 0.58 * easeInOut((t - 0.04) / 0.5);
+          function horizonY(t) {
+            let y = 720 + 440 * easeOutCubic((t - 0.1) / 0.48);
+            for (let k = 1; k < 5; k++) {
+              const d = t - T.b[k];
+              if (d > 0) y += (10 + 6 * k) * Math.exp(-d / 0.12) * Math.sin(d * 28);
+            }
+            return y + 70 * smooth(T.b[4], T.fly[0], t);
+          }
+          const camSway = (t) => 0.18 * Math.sin(t * 0.9) + 0.46 - 0.46 * smooth(0, 0.7, t);
+          function glowColor(t) {
+            const r = smooth(T.b[3], T.b[4], t);
+            return [212, 167, 124].map((c, i) => Math.round(c + ([229, 51, 63][i] - c) * r));
+          }
+          function drawField(t) {
+            const press = smooth(T.b[4], T.fly[0], t);
+            let pulse = 0;
+            T.b.forEach((b, k) => {
+              if (t > b) pulse += 0.35 * Math.exp(-(t - b) / 0.35) * (k / 4 + 0.4);
+            });
+            window.BTField.draw(ctx, {
+              pos: fieldPos(t),
+              vel: (fieldPos(t + 1 / 60) - fieldPos(Math.max(0, t - 1 / 60))) * 30,
+              hy: horizonY(t),
+              camH: camHeight(t),
+              camX: camSway(t),
+              fade: 1 - smooth(T.fly[0] + 0.05, T.fly[1], t),
+              press: press,
+              glow: glowColor(t),
+              glowA: 0.3 + 0.18 * press + pulse * 0.4,
+              particles: true,
+            });
+            lensLeaves(t);
+            const blur = 6.5 * (1 - smooth(0.22, 0.52, t));
+            canvas.style.filter = blur > 0.2 ? `blur(${blur.toFixed(2)}px)` : "none";
+          }
+
+          // folhas passando rente a lente no rush (primeiro plano em zoom-through)
+          const LENS = [
+            { t0: -0.24, x1: -420, y1: 2300, r0: -0.4, r1: -1.2, len: 1.1 },
+            { t0: -0.18, x1: 1480, y1: 2150, r0: 0.5, r1: 1.2, len: 1.0 },
+            { t0: -0.1, x1: 300, y1: 2600, r0: -0.1, r1: -0.6, len: 1.15 },
+            { t0: -0.04, x1: -340, y1: 1700, r0: -0.9, r1: -1.7, len: 0.85 },
+            { t0: 0.03, x1: 1400, y1: 2500, r0: 0.3, r1: 0.9, len: 1.05 },
+            { t0: 0.09, x1: 760, y1: 2650, r0: 0.15, r1: 0.7, len: 1.1 },
+            { t0: 0.15, x1: -380, y1: 2350, r0: -0.6, r1: -1.4, len: 0.95 },
+            { t0: 0.21, x1: 1460, y1: 1600, r0: 0.9, r1: 1.6, len: 0.8 },
+            { t0: 0.28, x1: 120, y1: 2500, r0: -0.3, r1: -0.9, len: 0.9 },
+          ];
+          function lensLeaves(t) {
+            if (t > 0.62) return;
+            const D = 0.34;
+            LENS.forEach((L, k) => {
+              const u = (t - L.t0) / D;
+              if (u <= 0 || u >= 1) return;
+              const hy = horizonY(Math.max(0, L.t0));
+              const x0 = 540 + (k % 2 ? 60 : -60);
+              const y0 = hy + 40;
+              const e = Math.pow(u, 2.2);
+              const x = x0 + (L.x1 - x0) * e;
+              const y = y0 + (L.y1 - y0) * e;
+              const sc = 0.07 * Math.pow(48, u);
+              const ang = L.r0 + (L.r1 - L.r0) * u;
+              const len = 640 * L.len * sc;
+              const wid = len * 0.2;
+              const speed = Math.min(1, u * 1.4);
+              ctx.save();
+              ctx.globalAlpha = Math.min(1, u * 6) * (1 - smooth(0.85, 1, u)) * 0.95;
+              ctx.filter = `blur(${(3 + 18 * speed * speed).toFixed(1)}px)`;
+              ctx.translate(x, y);
+              ctx.rotate(ang);
+              const g = ctx.createLinearGradient(-wid, 0, wid, -len);
+              g.addColorStop(0, "#1d3320");
+              g.addColorStop(0.6, "#33562f");
+              g.addColorStop(1, "#5c7f4a");
+              ctx.fillStyle = g;
+              ctx.beginPath();
+              ctx.moveTo(0, 0);
+              ctx.quadraticCurveTo(-wid * 1.6, -len * 0.45, 0, -len);
+              ctx.quadraticCurveTo(wid * 1.6, -len * 0.45, 0, 0);
+              ctx.fill();
+              ctx.strokeStyle = "rgba(190,214,160,0.55)";
+              ctx.lineWidth = Math.max(1.5, wid * 0.08);
+              ctx.beginPath();
+              ctx.moveTo(0, 0);
+              ctx.quadraticCurveTo(wid * 0.25, -len * 0.5, 0, -len * 0.96);
+              ctx.stroke();
+              ctx.restore();
+            });
+          }
+
+          // ----------------------------------------------------------------- microdados
+          const COLX = [36, 214, 392, 520, 690, 856];
+          const colsEl = $("dw-cols");
+          const colSpans = [];
+          const rnd = prng(20261004);
+          COLX.forEach((x, c) => {
+            const col = document.createElement("div");
+            col.className = "dw-col";
+            col.id = "dw-col" + c;
+            col.style.left = x + "px";
+            for (let k = 0; k < 40; k++) {
+              const sp = document.createElement("span");
+              const kind = rnd();
+              sp.dataset.base = String(1000 + rnd() * 30000);
+              sp.dataset.kind = kind < 0.25 ? "pct" : kind < 0.4 ? "rate" : "money";
+              if (kind < 0.25) sp.className = "up";
+              col.appendChild(sp);
+              colSpans.push(sp);
+            }
+            colsEl.appendChild(col);
+          });
+          function microText(sp, f, k) {
+            const base = parseFloat(sp.dataset.base);
+            const tick = Math.floor(f / (2 + (k % 3)));
+            const jitter = hash(k * 977 + tick * 131);
+            if (sp.dataset.kind === "pct") return "+" + (0.2 + jitter * 3.8).toFixed(2).replace(".", ",") + "%";
+            if (sp.dataset.kind === "rate") return (1 + jitter * 0.09).toFixed(4).replace(".", ",");
+            const v = base * (1 + 0.006 * tick * (0.3 + hash(k)) + jitter * 0.004);
+            return fmt(v) + "," + String(Math.floor(jitter * 100)).padStart(2, "0");
+          }
+          let lastMicroFrame = -1;
+          function updateMicro(t) {
+            const f = Math.floor(t * 30);
+            if (f === lastMicroFrame) return;
+            lastMicroFrame = f;
+            const hot = t > T.b[3];
+            for (let k = 0; k < colSpans.length; k++) {
+              const sp = colSpans[k];
+              sp.textContent = microText(sp, t < 2.5 ? 0 : f, k);
+              if (sp.dataset.kind === "pct") sp.className = hot && hash(k + f) > 0.6 ? "hot" : "up";
+            }
+          }
+
+          // ----------------------------------------------------------------- linhas de alta
+          function walk(seed, x0, y0, x1, y1, n, jag) {
+            const r = prng(seed);
+            let d = `M${x0} ${y0}`;
+            let len = 0;
+            let px = x0;
+            let py = y0;
+            for (let i = 1; i <= n; i++) {
+              const u = i / n;
+              const x = x0 + (x1 - x0) * u + (r() - 0.5) * 30;
+              const y = y0 + (y1 - y0) * Math.pow(u, 1.35) + (r() - 0.35) * jag;
+              d += ` L${x.toFixed(1)} ${y.toFixed(1)}`;
+              len += Math.hypot(x - px, y - py);
+              px = x;
+              py = y;
+            }
+            return [d, Math.ceil(len) + 2];
+          }
+          const lines = [
+            [$("dw-line1"), walk(7, -40, 1760, 1130, 330, 26, 120)],
+            [$("dw-line2"), walk(8, -40, 1640, 1130, 520, 22, 90)],
+            [$("dw-line3"), walk(9, -40, 1860, 1130, 700, 30, 70)],
+          ];
+          lines.forEach(([el, [d, L]]) => {
+            el.setAttribute("d", d);
+            el.style.strokeDasharray = `${L}`;
+            el.style.strokeDashoffset = `${L}`;
+          });
+
+          // ----------------------------------------------------------------- parede
+          // projecao plausivel: de R$ 22.390 ate ~R$ 48 mil (nunca milhoes)
+          const wallVals = [22390];
+          const wr = prng(4413);
+          for (let i = 1; i < 60; i++) wallVals.push(wallVals[i - 1] * (1.006 + wr() * 0.016));
+          function buildPlane(id, rows, perRow, classes, seed) {
+            const el = $(id);
+            const r = prng(seed);
+            for (let i = 0; i < rows; i++) {
+              const row = document.createElement("div");
+              row.className = "wall-row " + classes[i % classes.length];
+              const parts = [];
+              for (let c = 0; c < perRow; c++) {
+                const v = wallVals[Math.floor(r() * wallVals.length)];
+                parts.push((c % 2 === 0 ? "R$ " : "") + fmt(v));
+              }
+              row.textContent = parts.join("   ");
+              el.appendChild(row);
+            }
+            return el;
+          }
+          buildPlane("wall-far", 30, 6, ["dim", "dim", "dim", "red"], 11);
+          buildPlane("wall-mid", 13, 3, ["solid", "line", "red", "solid", "line", "solid"], 12);
+          buildPlane("wall-mid2", 10, 2, ["line", "solid", "line", "red"], 13);
+          $("wall-far").style.top = "-120px";
+          $("wall-mid").style.top = "-150px";
+          $("wall-mid2").style.top = "-120px";
+          const midRows = Array.from(document.querySelectorAll("#wall-mid .wall-row, #wall-mid2 .wall-row"));
+
+          // ----------------------------------------------------------------- tremor, grao, contador
+          const shakeEl = $("dw-shake");
+          const grainEl = $("fx-grain");
+          const digitsEl = $("dw-digits");
+          const deltaEl = $("dw-delta-val");
+          function shake(t) {
+            let amp = 0;
+            const imp = [0, 7, 10, 15, 26];
+            for (let k = 1; k < 5; k++) {
+              const d = t - T.b[k];
+              if (d >= 0) amp += imp[k] * Math.exp(-d / 0.16);
+            }
+            T.s2.forEach((s, k) => {
+              const d = t - s;
+              if (d >= 0) amp += (6 + (k === 4 ? 10 : 0)) * Math.exp(-d / 0.12);
+            });
+            amp += 2.5 * smooth(T.b[4], T.fly[0], t) + 7 * smooth(T.wall[0], T.freeze, t);
+            const f = Math.floor(t * 30);
+            return [(hash(f * 3 + 1) - 0.5) * 2 * amp, (hash(f * 3 + 2) - 0.5) * 2 * amp];
+          }
+          function frame(rawT) {
+            const t = Math.min(rawT, T.freeze);
+            drawField(t);
+            updateMicro(t);
+            const [sx, sy] = shake(t);
+            shakeEl.style.transform = `translate3d(${sx.toFixed(2)}px, ${sy.toFixed(2)}px, 0)`;
+            const f = Math.floor(t * 30);
+            grainEl.style.backgroundPosition = `${Math.floor(hash(f * 7 + 3) * 512)}px ${Math.floor(hash(f * 7 + 4) * 512)}px`;
+            let v = T.vals[0];
+            let pct = 0;
+            for (let k = 1; k < 5; k++) {
+              const b = T.b[k];
+              const r0 = b - T.roll[k];
+              if (t >= b) {
+                v = T.vals[k];
+                pct = T.pct[k];
+              } else if (t > r0) {
+                const u = Math.pow((t - r0) / T.roll[k], 2);
+                v = T.vals[k - 1] + (T.vals[k] - T.vals[k - 1]) * u;
+                pct = T.pct[k - 1] + (T.pct[k] - T.pct[k - 1]) * u;
+              }
+            }
+            digitsEl.textContent = fmt(v);
+            deltaEl.textContent = fmtPct(pct);
+            if (t > T.wall[0]) {
+              const u = (t - T.wall[0]) / (T.freeze - T.wall[0]);
+              const step = Math.floor((t - T.wall[0]) * (5 + 9 * u));
+              midRows.forEach((r, k) => {
+                r.style.color = hash(k * 13 + step * 7) > 0.78 - 0.18 * u ? RED : "";
+              });
+            }
+          }
+
+          // ----------------------------------------------------------------- timeline
+          const tl = gsap.timeline({ paused: true });
+          const P = { t: 0 };
+          tl.to(P, { t: T.end, duration: T.end, ease: "none", onUpdate: () => frame(P.t) }, 0);
+
+          // camera: snap zoom do foco, empurroes por golpe, recuo no 17.640, inclinacao na pressao
+          tl.fromTo("#dw-cam", { scale: 1.08, rotation: 0 }, { scale: 1, duration: 0.5, ease: "power2.out" }, 0);
+          tl.to("#dw-cam", { scale: 1.05, duration: 0.065, ease: "power2.out" }, 0.5);
+          tl.to("#dw-cam", { scale: 1.0, duration: 0.3, ease: "power2.out" }, 0.57);
+          tl.to("#dw-cam", { scale: 1.035, duration: T.b[1] - 0.872, ease: "sine.inOut" }, 0.87);
+          tl.to("#dw-cam", { scale: 1.075, duration: 0.18, ease: "power3.out" }, T.b[1]);
+          tl.to("#dw-cam", { scale: 1.09, duration: T.b[2] - T.b[1] - 0.182, ease: "sine.inOut" }, T.b[1] + 0.18);
+          tl.to("#dw-cam", { scale: 1.13, duration: 0.18, ease: "power3.out" }, T.b[2]);
+          tl.to("#dw-cam", { scale: 1.15, duration: T.b[3] - T.b[2] - 0.182, ease: "sine.inOut" }, T.b[2] + 0.18);
+          tl.to("#dw-cam", { scale: 0.99, rotation: -1.2, duration: 0.32, ease: "power3.out" }, T.b[3]);
+          tl.to("#dw-cam", { scale: 1.01, rotation: -0.6, duration: 4.22 - T.b[3] - 0.322, ease: "sine.inOut" }, T.b[3] + 0.32);
+          tl.to("#dw-cam", { scale: 0.995, duration: T.b[4] - 4.222, ease: "sine.inOut" }, 4.22);
+          tl.to("#dw-cam", { scale: 1.12, rotation: 2.4, duration: 0.2, ease: "power4.out" }, T.b[4]);
+          tl.to("#dw-cam", { scale: 1.2, rotation: -1.6, duration: T.fly[0] - T.b[4] - 0.2, ease: "sine.inOut" }, T.b[4] + 0.2);
+          tl.to("#dw-cam", { scale: 1.32, rotation: 0, duration: T.fly[1] - T.fly[0], ease: "power3.in" }, T.fly[0]);
+          tl.to("#dw-cam", { scale: 1.42, rotation: 1.2, duration: T.freeze - T.fly[1], ease: "power1.in" }, T.fly[1]);
+
+          // ceu: o alerta vermelho entra como acento no 17.640 e domina no 22.390
+          tl.to("#dw-sky-red", { opacity: 0.22, duration: 0.3, ease: "power2.out" }, T.b[3]);
+          tl.to("#dw-sky-red", { opacity: 0.85, duration: 0.2, ease: "power2.out" }, T.b[4]);
+
+          // curvas de nivel: o terreno vira dado
+          tl.fromTo("#dw-contours", { opacity: 0, scale: 0.9, rotation: -6 }, { opacity: 0.14, scale: 1.05, rotation: 0, duration: 1.4, ease: "sine.inOut" }, 2.0);
+          tl.to("#dw-contours", { opacity: 0.26, scale: 1.25, rotation: 8, duration: T.fly[0] - 3.4, ease: "sine.in" }, 3.4);
+          tl.to("#dw-contours", { opacity: 0, scale: 2.2, duration: 0.35, ease: "power2.in" }, T.fly[0]);
+
+          // ------------------------------- heroi
+          // R$ 10.000 aparece no foco, com click: pequeno, estavel, controlado
+          const S = [0.44, 0.5, 0.6, 0.84, 0.9];
+          tl.fromTo("#dw-num", { opacity: 0, scale: 0.4, filter: "blur(14px)" }, { opacity: 1, scale: S[0], filter: "blur(0px)", duration: 0.2, ease: "power3.out" }, T.b[0]);
+          tl.fromTo("#dw-label", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }, T.b[0] + 0.04);
+          tl.to("#dw-num", { scale: 0.455, duration: T.b[1] - T.b[0] - 0.42, ease: "sine.inOut" }, T.b[0] + 0.2);
+
+          // "cresce": a moldura da capacidade de pagamento se desenha e o indicador aparece
+          tl.fromTo("#dw-frame .e-top, #dw-frame .e-bottom", { scaleX: 0 }, { scaleX: 1, duration: 0.32, ease: "power3.out" }, T.cresce - 0.08);
+          tl.fromTo("#dw-frame .e-left, #dw-frame .e-right", { scaleY: 0 }, { scaleY: 1, duration: 0.32, ease: "power3.out" }, T.cresce - 0.02);
+          tl.fromTo("#dw-frame .corner", { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.25, ease: "power3.out", stagger: 0.03 }, T.cresce + 0.08);
+          tl.fromTo("#dw-frame, #dw-frame-glow", { scale: 1 }, { scale: 1.04, duration: T.b[3] - T.cresce, ease: "sine.inOut" }, T.cresce);
+          tl.fromTo("#dw-delta", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.25, ease: "power3.out" }, T.cresce);
+
+          const drift = [0.455, 0.515, 0.62, 0.87];
+          for (let k = 1; k < 5; k++) {
+            const b = T.b[k];
+            const r0 = b - T.roll[k];
+            // antecipacao: aperta enquanto os digitos rolam
+            tl.to("#dw-num", { scale: drift[k - 1] * 0.95, duration: T.roll[k], ease: "power2.in" }, r0);
+            // golpe: salta acima do tamanho final e assenta (recuo do impacto)
+            const over = k === 4 ? 2.1 : 1.12;
+            tl.fromTo("#dw-num", { scale: S[k] * over, filter: k === 4 ? "blur(12px)" : "blur(7px)" }, { scale: S[k], filter: "blur(0px)", duration: k === 4 ? 0.42 : 0.32, ease: "power3.out", immediateRender: false }, b);
+            // eco contornado e onda de choque
+            tl.fromTo("#dw-echo" + k, { opacity: 0.75, scale: S[k] }, { opacity: 0, scale: S[k] * 1.5, duration: 0.42, ease: "power2.out", immediateRender: false }, b);
+            tl.fromTo("#dw-ring" + k, { opacity: 0.7, scale: 0.3 }, { opacity: 0, scale: 2.4 + 0.5 * k, duration: 0.5, ease: "power2.out", immediateRender: false }, b);
+          }
+          // deriva continua entre golpes (nunca parado)
+          tl.to("#dw-num", { scale: drift[1], duration: T.b[2] - T.b[1] - 0.52, ease: "sine.inOut" }, T.b[1] + 0.32);
+          tl.to("#dw-num", { scale: drift[2], duration: T.b[3] - T.b[2] - 0.52, ease: "sine.inOut" }, T.b[2] + 0.32);
+          tl.to("#dw-num", { scale: drift[3], duration: 4.21 - T.b[3] - 0.32, ease: "sine.inOut" }, T.b[3] + 0.32);
+          tl.to("#dw-num", { scale: 1.16, y: -12, duration: T.fly[0] - T.b[4] - 0.42, ease: "sine.inOut" }, T.b[4] + 0.42);
+
+          // 13.480: encosta na capacidade (brilho dourado na moldura)
+          tl.fromTo("#dw-frame-glow", { opacity: 0 }, { opacity: 1, duration: 0.06, ease: "none", immediateRender: false }, T.b[2]);
+          tl.to("#dw-frame-glow", { opacity: 0, duration: 0.45, ease: "power2.out" }, T.b[2] + 0.06);
+
+          // 17.640: rompe a moldura (primeiro vermelho, como acento)
+          tl.set("#dw-frame .edge", { backgroundColor: RED }, T.b[3]);
+          tl.set("#dw-cur", { color: RED }, T.b[3]);
+          tl.set("#dw-delta", { color: RED }, T.b[3]);
+          tl.to("#dw-frame .e-top", { y: -170, rotation: -7, opacity: 0, duration: 0.55, ease: "power2.out" }, T.b[3]);
+          tl.to("#dw-frame .e-bottom", { y: 170, rotation: 6, opacity: 0, duration: 0.55, ease: "power2.out" }, T.b[3]);
+          tl.to("#dw-frame .e-left", { x: -230, rotation: -14, opacity: 0, duration: 0.55, ease: "power2.out" }, T.b[3]);
+          tl.to("#dw-frame .e-right", { x: 230, rotation: 12, opacity: 0, duration: 0.55, ease: "power2.out" }, T.b[3]);
+          tl.to("#dw-frame .c-tl", { x: -180, y: -160, opacity: 0, duration: 0.5, ease: "power2.out" }, T.b[3]);
+          tl.to("#dw-frame .c-tr", { x: 180, y: -160, opacity: 0, duration: 0.5, ease: "power2.out" }, T.b[3]);
+          tl.to("#dw-frame .c-bl", { x: -180, y: 160, opacity: 0, duration: 0.5, ease: "power2.out" }, T.b[3]);
+          tl.to("#dw-frame .c-br", { x: 180, y: 160, opacity: 0, duration: 0.5, ease: "power2.out" }, T.b[3]);
+          tl.to("#dw-label", { opacity: 0, y: -24, duration: 0.14, ease: "power2.in" }, T.b[3]);
+          tl.to("#dw-delta", { y: 84, duration: 0.3, ease: "power3.out" }, T.b[3]);
+
+          // 22.390: quase colide com a camera
+          tl.fromTo("#dw-num-glow", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1.25, duration: 0.3, ease: "power2.out" }, T.b[4]);
+          tl.to("#dw-num-glow", { opacity: 0.55, scale: 1.45, duration: T.fly[0] - T.b[4] - 0.3, ease: "sine.inOut" }, T.b[4] + 0.3);
+          tl.to("#dw-delta", { x: -70, y: 310, scale: 1.55, duration: 0.3, ease: "power3.out" }, T.b[4]);
+
+          // mergulho atraves do numero
+          tl.to("#dw-num", { scale: 8, filter: "blur(30px)", duration: 0.32, ease: "power3.in" }, T.fly[0]);
+          tl.to("#dw-num", { opacity: 0, duration: 0.1, ease: "none" }, T.fly[0] + 0.22);
+          tl.to("#dw-num-glow", { opacity: 0, scale: 3, duration: 0.3, ease: "power2.in" }, T.fly[0]);
+          tl.to("#dw-delta", { scale: 4, opacity: 0, duration: 0.28, ease: "power2.in" }, T.fly[0]);
+
+          // ------------------------------- texto cinetico (frase 1)
+          const fragIn = (sel, at, from) =>
+            tl.fromTo(sel, Object.assign({ opacity: 0, y: 46, filter: "blur(8px)" }, from || {}), { opacity: 1, y: 0, x: 0, skewX: 0, scaleY: 1, filter: "blur(0px)", duration: 0.26, ease: "power4.out" }, at);
+          const fragOut = (sel, at) => tl.to(sel, { opacity: 0, y: -60, filter: "blur(8px)", duration: 0.17, ease: "power3.in" }, at);
+          fragIn("#dw-fa1", T.fa1);
+          fragIn("#dw-fa2", T.cresce, { y: 60, scaleY: 0.55 });
+          fragOut("#dw-fa1, #dw-fa2", T.fb1 - 0.05);
+          fragIn("#dw-fb1", T.fb1 + 0.04);
+          fragIn("#dw-fb2", T.b[1], { y: 0, x: 160, skewX: -22, filter: "blur(12px)" });
+          fragOut("#dw-fb1, #dw-fb2", T.fc1 - 0.05);
+          fragIn("#dw-fc1", T.fc1 + 0.04);
+          fragIn("#dw-fc2", T.b[2]);
+          fragIn("#dw-fc3", T.fc3);
+          tl.set("#dw-fc2, #dw-fc3", { color: RED }, T.b[3]);
+          tl.to("#dw-fc1, #dw-fc2, #dw-fc3", { opacity: 0, scale: 1.6, y: -50, filter: "blur(14px)", duration: 0.22, ease: "power2.in" }, T.b[4]);
+
+          // ------------------------------- flashes (curtos; vermelho so a partir do 17.640)
+          tl.fromTo("#fx-white", { opacity: 0.45 }, { opacity: 0, duration: 0.14, ease: "power2.out", immediateRender: false }, T.b[2]);
+          tl.fromTo("#fx-white", { opacity: 0.3 }, { opacity: 0, duration: 0.12, ease: "power2.out", immediateRender: false }, T.b[3]);
+          tl.fromTo("#fx-red", { opacity: 0.3 }, { opacity: 0, duration: 0.16, ease: "power2.out", immediateRender: false }, T.b[3] + 0.03);
+          tl.fromTo("#fx-white", { opacity: 0.85 }, { opacity: 0, duration: 0.05, ease: "none", immediateRender: false }, T.b[4]);
+          tl.fromTo("#fx-red", { opacity: 0.75 }, { opacity: 0, duration: 0.22, ease: "power2.out", immediateRender: false }, T.b[4] + 0.05);
+          tl.fromTo("#fx-redvig", { opacity: 0.0 }, { opacity: 0.51, duration: 0.1, ease: "power2.out", immediateRender: false }, T.b[4]);
+          tl.to("#fx-redvig", { opacity: 0.24, duration: 0.5, ease: "power2.out" }, T.b[4] + 0.1);
+          T.labels.forEach((lt, k) => {
+            if (k % 2 === 0) tl.fromTo("#fx-redvig", { opacity: 0.48 }, { opacity: 0.24, duration: 0.3, ease: "power2.out", immediateRender: false }, lt);
+          });
+
+          // ------------------------------- pressao
+          tl.fromTo("#dw-cols", { opacity: 0 }, { opacity: 0.12, duration: 0.5, ease: "sine.inOut" }, 2.6);
+          tl.to("#dw-cols", { opacity: 0.24, duration: 0.6, ease: "sine.inOut" }, T.b[4]);
+          tl.to("#dw-cols", { opacity: 0.32, duration: 1.2, ease: "sine.inOut" }, 5.4);
+          COLX.forEach((x, c) => {
+            const dir = c % 2 === 0 ? -1 : -0.6;
+            tl.fromTo("#dw-col" + c, { y: 0 }, { y: dir * (520 + c * 40), duration: T.fly[0] - 2.6, ease: "power2.in" }, 2.6);
+          });
+          tl.to("#dw-cols", { scale: 2.2, opacity: 0, duration: 0.32, ease: "power2.in", transformOrigin: "540px 900px" }, T.fly[0]);
+
+          lines.forEach(([el], k) => {
+            tl.to(el, { strokeDashoffset: 0, duration: 2.3 - k * 0.25, ease: "power1.in" }, T.b[4] + 0.05 + k * 0.18);
+          });
+          tl.to("#dw-lines", { opacity: 0, scale: 1.8, duration: 0.3, ease: "power2.in", transformOrigin: "540px 900px" }, T.fly[0]);
+
+          T.labels.forEach((lt, k) => {
+            const sel = "#dw-tag" + k;
+            tl.fromTo(sel, { opacity: 0, scale: 1.45, filter: "blur(10px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.18, ease: "power3.out" }, lt);
+            tl.to(sel, { y: -36 - k * 3, duration: T.fly[0] - lt, ease: "sine.in" }, lt);
+            const away = [[-260, -220], [260, 220], [260, -220], [-260, 220], [120, -300], [-80, 300], [-300, -60]][k];
+            tl.to(sel, { x: away[0], y: away[1], scale: 2.4, opacity: 0, filter: "blur(10px)", duration: 0.3, ease: "power2.in" }, T.fly[0]);
+          });
+
+          // documento: a cedula atravessa o quadro (passa atras do numero e depois na frente)
+          tl.fromTo(
+            "#dw-doc",
+            { opacity: 0, x: 420, y: 160, z: -900, rotationY: -40, rotationX: 16, rotation: 8, transformPerspective: 1200, filter: "blur(3px)" },
+            { opacity: 1, x: 120, y: 40, z: -350, rotationY: -22, rotationX: 10, rotation: 4, filter: "blur(0px)", duration: 0.5, ease: "power2.out" },
+            T.doc[0],
+          );
+          tl.to("#dw-doc", { x: -60, y: -20, z: 80, rotationY: 6, rotationX: 6, rotation: -2, duration: 0.55, ease: "sine.inOut" }, T.doc[0] + 0.5);
+          tl.set("#dw-doc", { zIndex: 3 }, T.doc[1] - 0.4);
+          tl.to("#dw-doc", { x: -380, y: -120, z: 760, rotationY: 30, rotationX: 2, rotation: -9, opacity: 0, filter: "blur(14px)", duration: 0.35, ease: "power2.in" }, T.doc[1] - 0.35);
+
+          // ------------------------------- parede de numeros
+          tl.fromTo("#fx-white", { opacity: 0.55 }, { opacity: 0, duration: 0.12, ease: "power2.out", immediateRender: false }, T.wall[0]);
+          tl.fromTo("#dw-wall", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.26, ease: "power3.out" }, T.wall[0]);
+          tl.to("#dw-wall", { scale: 1.34, duration: T.freeze - T.wall[0] - 0.26, ease: "power2.in" }, T.wall[0] + 0.26);
+          tl.fromTo("#wall-far", { y: 0, x: 0 }, { y: -320, x: -120, duration: T.freeze - T.wall[0], ease: "power1.in" }, T.wall[0]);
+          tl.fromTo("#wall-mid", { y: 0 }, { y: -560, duration: T.freeze - T.wall[0], ease: "power2.in" }, T.wall[0]);
+          tl.fromTo("#wall-mid2", { opacity: 0, y: 260 }, { opacity: 0.55, y: -600, duration: T.freeze - 8.3, ease: "power2.in" }, 8.3);
+          Array.from(document.querySelectorAll("#wall-mid .wall-row")).forEach((r, k) => {
+            const d = (k % 2 === 0 ? -1 : 1) * (260 + (k % 3) * 120);
+            tl.fromTo(r, { x: 0 }, { x: d, duration: T.freeze - T.wall[0], ease: "power2.in" }, T.wall[0]);
+          });
+          Array.from(document.querySelectorAll("#wall-mid2 .wall-row")).forEach((r, k) => {
+            const d = (k % 2 === 0 ? 1 : -1) * (300 + (k % 3) * 140);
+            tl.fromTo(r, { x: 0 }, { x: d, duration: T.freeze - 8.3, ease: "power2.in" }, 8.3);
+          });
+          [[8.05, 1], [8.95, 2], [9.75, 3], [10.3, 1]].forEach(([at, n]) => {
+            const sel = "#wall-near" + n;
+            tl.fromTo(sel, { opacity: 0, scale: 0.5, filter: "blur(2px)" }, { opacity: 0.85, scale: 1.4, filter: "blur(0px)", duration: 0.22, ease: "power2.out", immediateRender: false }, at);
+            tl.to(sel, { opacity: 0, scale: 3.4, filter: "blur(18px)", duration: Math.min(0.36, T.freeze - at - 0.22), ease: "power2.in" }, at + 0.22);
+          });
+          // pulsos vermelhos acelerando (vinheta; flash cheio nunca acima de 3 por segundo)
+          let pt = T.wall[0] + 0.25;
+          let pk = 0;
+          while (pt < T.freeze - 0.1) {
+            const u = (pt - T.wall[0]) / (T.freeze - T.wall[0]);
+            tl.fromTo("#fx-redvig", { opacity: 0.57 }, { opacity: (0.35 + 0.3 * u) * 0.6, duration: 0.2, ease: "power2.out", immediateRender: false }, pt);
+            if (pk % 3 === 0) tl.fromTo("#fx-red", { opacity: 0.16 + 0.1 * u }, { opacity: 0, duration: 0.2, ease: "power2.out", immediateRender: false }, pt);
+            pt += 0.5 - 0.3 * u;
+            pk++;
+          }
+
+          // ------------------------------- frase 2 sobre a parede
+          tl.fromTo("#dw-s2-band", { opacity: 0 }, { opacity: 1, duration: 0.18, ease: "power2.out" }, T.s2[0] - 0.08);
+          const slam = (sel, at, s0) => {
+            tl.fromTo(sel, { opacity: 0, scale: s0 || 1.3, filter: "blur(12px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out" }, at);
+          };
+          slam("#dw-s2a", T.s2[0]);
+          slam("#dw-s2b", T.s2[1], 1.4);
+          tl.fromTo("#dw-s2-under", { opacity: 1, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: 0.35, ease: "power3.out" }, T.s2[1] + 0.12);
+          slam("#dw-s2c", T.s2[2]);
+          slam("#dw-s2d", T.s2[3]);
+          slam("#dw-s2e", T.s2[4], 1.55);
+          T.s2.slice(1).forEach((at, k) => {
+            tl.to("#dw-s2", { y: -(k + 1) * 14, duration: 0.25, ease: "power3.out" }, at);
+          });
+          tl.fromTo("#fx-white", { opacity: 0.4 }, { opacity: 0, duration: 0.1, ease: "power2.out", immediateRender: false }, T.s2[4]);
+
+          // ------------------------------- CONGELAMENTO e estouro
+          tl.set("#dw-cam", { filter: "saturate(0.5) brightness(0.8)" }, T.freeze);
+          tl.set("#fx-redvig", { opacity: 0.3 }, T.freeze);
+          tl.set("#fx-red, #fx-white", { opacity: 0 }, T.freeze);
+          tl.fromTo("#dw-burst", { scale: 1, opacity: 1, filter: "blur(0px)" }, { scale: 2.5, opacity: 0, filter: "blur(22px)", duration: T.burst[1] - T.burst[0], ease: "power3.in" }, T.burst[0]);
+          tl.to("#fx-redvig", { opacity: 0.0, duration: 0.16, ease: "power2.in" }, T.burst[0]);
+          tl.to("#dw-sky-red", { opacity: 0, duration: 0.16, ease: "power2.in" }, T.burst[0]);
+
+          frame(0);
+          window.addEventListener("hf-seek", (e) => {
+            if (e && e.detail && typeof e.detail.time === "number" && e.detail.time <= T.end) frame(e.detail.time);
+          });
+          window.__timelines["debt-world"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>
