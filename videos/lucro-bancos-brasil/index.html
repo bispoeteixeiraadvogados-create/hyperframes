@@ -1,0 +1,1360 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Lucro dos 5 maiores bancos do Brasil</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #070e1f;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: Montserrat, sans-serif;
+        color: #f4f6fb;
+        background: #0b1630;
+      }
+      #scene {
+        position: absolute;
+        inset: 0;
+      }
+      #bg {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(1300px 820px at 34% 46%, #15284f 0%, #0d1a38 52%, #070e1f 100%),
+          #0b1630;
+      }
+
+      /* Title block */
+      #title-block {
+        position: absolute;
+        left: 60px;
+        top: 38px;
+        width: 1220px;
+      }
+      #title {
+        font-weight: 900;
+        font-size: 50px;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        color: #f4f6fb;
+      }
+      #subtitle {
+        margin-top: 12px;
+        font-weight: 400;
+        font-size: 21px;
+        line-height: 1.3;
+        color: #aeb9cf;
+        white-space: nowrap;
+      }
+
+      /* Year counter */
+      #year-block {
+        position: absolute;
+        right: 60px;
+        top: 30px;
+        width: 290px;
+        text-align: right;
+      }
+      #year-label {
+        display: block;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: 0.32em;
+        color: #8c99b3;
+        margin-bottom: 14px;
+      }
+      #year-num {
+        display: block;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 104px;
+        line-height: 1;
+        letter-spacing: -0.04em;
+        color: #f5c542;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Selic readout */
+      #selic-readout {
+        position: absolute;
+        left: 1302px;
+        top: 112px;
+        width: 268px;
+      }
+      #selic-title {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: 0.14em;
+        color: #aeb9cf;
+      }
+      #selic-value {
+        margin-top: 2px;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 38px;
+        line-height: 1.1;
+        color: #c084fc;
+        font-variant-numeric: tabular-nums;
+      }
+      #selic-key {
+        margin-top: 2px;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 400;
+        font-size: 16px;
+        color: #aeb9cf;
+      }
+      #selic-key .up {
+        color: #c084fc;
+      }
+      #selic-key .down {
+        color: #22d3ee;
+      }
+
+      #chart {
+        position: absolute;
+        left: 0;
+        top: 0;
+        overflow: visible;
+      }
+      #chart text {
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      /* Bank tip labels */
+      .lbl {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        opacity: 0;
+      }
+      .badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 36px;
+        min-width: 112px;
+        padding: 0 12px;
+        border-radius: 8px;
+        font-weight: 900;
+        font-size: 20px;
+        letter-spacing: -0.01em;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      }
+      .b-itau {
+        background: #ec7000;
+        color: #0b1f55;
+      }
+      .b-bb {
+        background: #fcfc30;
+        color: #2b3fcc;
+      }
+      .b-bradesco {
+        background: #cc092f;
+        color: #ffffff;
+      }
+      .b-caixa {
+        background: #005ca9;
+        color: #ffffff;
+        border-bottom: 4px solid #f39200;
+      }
+      .b-santander {
+        background: #ec0000;
+        color: #ffffff;
+      }
+      .val {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 24px;
+        color: #f4f6fb;
+        font-variant-numeric: tabular-nums;
+        padding: 2px 8px;
+        border-radius: 8px;
+        background: rgba(8, 16, 36, 0.92);
+      }
+      .rank {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 20px;
+        color: #f5c542;
+        opacity: 0;
+      }
+
+      /* Pulse rings on the Selic line */
+      .ring {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        margin: -15px 0 0 -15px;
+        border-radius: 50%;
+        border: 3px solid #c084fc;
+        opacity: 0;
+      }
+      .ring.down {
+        border-color: #22d3ee;
+      }
+
+      /* Gold coin stack */
+      #coins-panel {
+        position: absolute;
+        left: 1590px;
+        top: 236px;
+        width: 290px;
+        height: 664px;
+      }
+      #coin-label {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 1.35;
+        letter-spacing: 0.12em;
+        color: #e0b84c;
+      }
+      #coin-value {
+        margin-top: 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 40px;
+        line-height: 1.1;
+        color: #f5c542;
+        font-variant-numeric: tabular-nums;
+      }
+      #coin-year {
+        margin-top: 12px;
+        font-weight: 400;
+        font-size: 18px;
+        color: #aeb9cf;
+      }
+      #coin-note {
+        margin-top: 4px;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 1.3;
+        color: #aeb9cf;
+      }
+      #coin-stack {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 290px;
+        height: 440px;
+      }
+      .coin {
+        position: absolute;
+        left: 55px;
+        bottom: 0;
+        width: 180px;
+        height: 50px;
+        opacity: 0;
+      }
+      .coin .edge {
+        position: absolute;
+        left: 0;
+        top: 18px;
+        width: 180px;
+        height: 32px;
+        border-radius: 0 0 90px 90px / 0 0 22px 22px;
+        background: linear-gradient(
+          90deg,
+          #7a5714 0%,
+          #c8962c 22%,
+          #f6d36b 48%,
+          #c8962c 74%,
+          #6e4e10 100%
+        );
+      }
+      .coin .face {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 180px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #8a6418;
+        background: radial-gradient(
+          ellipse at 40% 35%,
+          #fff2b0 0%,
+          #f5cd55 34%,
+          #d9a332 70%,
+          #a87a22 100%
+        );
+        box-shadow: inset 0 0 0 7px rgba(138, 100, 24, 0.32);
+      }
+
+      /* Event balloons */
+      .balloon {
+        position: absolute;
+        width: 470px;
+        padding: 14px 18px 16px;
+        border-radius: 14px;
+        background: rgba(8, 16, 36, 0.95);
+        border: 2px solid rgba(245, 197, 66, 0.6);
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+        opacity: 0;
+      }
+      .balloon .tag {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: 0.1em;
+        color: #f5c542;
+      }
+      .balloon .txt {
+        margin-top: 6px;
+        font-weight: 700;
+        font-size: 23px;
+        line-height: 1.25;
+        color: #f4f6fb;
+      }
+
+      /* Caption bar (on-screen narration) */
+      #caption-bar {
+        position: absolute;
+        left: 60px;
+        top: 954px;
+        width: 1800px;
+        height: 62px;
+        border-left: 6px solid #f5c542;
+      }
+      .cap {
+        position: absolute;
+        left: 24px;
+        top: 8px;
+        width: 1760px;
+        font-weight: 700;
+        font-size: 34px;
+        line-height: 1.3;
+        color: #f4f6fb;
+        opacity: 0;
+      }
+      #sources {
+        position: absolute;
+        left: 60px;
+        top: 1034px;
+        width: 1800px;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 1.3;
+        color: #aeb9cf;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="30"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="scene" class="clip" data-start="0" data-duration="30" data-track-index="0">
+        <div id="bg"></div>
+
+        <header id="title-block">
+          <h1 id="title">Lucro dos 5 maiores bancos do Brasil</h1>
+          <p id="subtitle">
+            Lucro líquido anual em R$ bilhões nominais, 2000 a 2025 · bancos não divulgam
+            faturamento comparável
+          </p>
+        </header>
+
+        <div id="year-block">
+          <span id="year-label">ANO</span>
+          <span id="year-num">2000</span>
+        </div>
+
+        <div id="selic-readout">
+          <div id="selic-title">SELIC (EIXO DIREITO)</div>
+          <div id="selic-value">15,75%</div>
+          <div id="selic-key"><span class="up">▲ alta</span> · <span class="down">▼ queda</span></div>
+        </div>
+
+        <svg id="chart" width="1920" height="1080" viewBox="0 0 1920 1080">
+          <defs>
+            <clipPath id="reveal">
+              <rect id="reveal-rect" x="100" y="120" width="0" height="820"></rect>
+            </clipPath>
+            <marker
+              id="arrow"
+              viewBox="0 0 10 10"
+              refX="8"
+              refY="5"
+              markerWidth="9"
+              markerHeight="9"
+              orient="auto-start-reverse"
+            >
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#f5c542"></path>
+            </marker>
+          </defs>
+          <g id="grid"></g>
+          <g id="guides"></g>
+          <g id="series" clip-path="url(#reveal)">
+            <g id="selic-g"></g>
+            <g id="banks-g"></g>
+          </g>
+          <g id="leaders"></g>
+          <g id="tips"></g>
+          <g id="connectors"></g>
+        </svg>
+
+        <div id="rings"></div>
+
+        <div id="labels">
+          <div class="lbl" id="lbl-itau">
+            <span class="badge b-itau">itaú</span><span class="val" id="val-itau"></span
+            ><span class="rank" id="rank-itau">1º</span>
+          </div>
+          <div class="lbl" id="lbl-bb">
+            <span class="badge b-bb">BB</span><span class="val" id="val-bb"></span
+            ><span class="rank" id="rank-bb">3º</span>
+          </div>
+          <div class="lbl" id="lbl-bradesco">
+            <span class="badge b-bradesco">bradesco</span><span class="val" id="val-bradesco"></span
+            ><span class="rank" id="rank-bradesco">2º</span>
+          </div>
+          <div class="lbl" id="lbl-caixa">
+            <span class="badge b-caixa">CAIXA</span><span class="val" id="val-caixa"></span
+            ><span class="rank" id="rank-caixa">5º</span>
+          </div>
+          <div class="lbl" id="lbl-santander">
+            <span class="badge b-santander">santander</span
+            ><span class="val" id="val-santander"></span
+            ><span class="rank" id="rank-santander">4º</span>
+          </div>
+        </div>
+
+        <div id="coins-panel">
+          <div id="coin-label">LUCRO SOMADO DOS 5 BANCOS</div>
+          <div id="coin-value">R$ 4,6 bi</div>
+          <div id="coin-year">em 2000</div>
+          <div id="coin-note">*só Itaú, BB e Bradesco: sem dado de Caixa e Santander</div>
+          <div id="coin-stack"></div>
+        </div>
+
+        <div id="events">
+          <div class="balloon" id="ev-banespa" style="left: 200px; top: 262px">
+            <div class="tag">NOV/2000 · PRIVATIZAÇÃO</div>
+            <div class="txt">Santander compra o Banespa em leilão por R$ 7,05 bi</div>
+          </div>
+          <div class="balloon" id="ev-selic25" style="left: 330px; top: 248px">
+            <div class="tag">2002 · JUROS NO TOPO</div>
+            <div class="txt">Selic termina o ano em 25%, o pico da série</div>
+          </div>
+          <div class="balloon" id="ev-fusoes" style="left: 640px; top: 250px">
+            <div class="tag">2008 · FUSÕES</div>
+            <div class="txt">Itaú + Unibanco e Santander + Real redesenham o setor</div>
+          </div>
+          <div class="balloon" id="ev-crise" style="left: 640px; top: 384px">
+            <div class="tag">SET/2008 · CRISE GLOBAL</div>
+            <div class="txt">Quebra do Lehman Brothers; Bradesco faz provisão extra de R$ 597 mi</div>
+          </div>
+          <div class="balloon" id="ev-recessao" style="left: 300px; top: 250px">
+            <div class="tag">2015-16 · RECESSÃO</div>
+            <div class="txt">PIB cai 3,8% e 3,6%; Selic sobe a 14,25%</div>
+          </div>
+          <div class="balloon" id="ev-queda16" style="left: 300px; top: 384px">
+            <div class="tag">2016 · ESTATAIS EM QUEDA</div>
+            <div class="txt">Lucro ajustado do BB cai 38%; o da Caixa, 43%</div>
+          </div>
+          <div class="balloon" id="ev-covid" style="left: 560px; top: 384px">
+            <div class="tag">2020 · COVID-19</div>
+            <div class="txt">Selic cai a 2%, mínima histórica; o lucro dos cinco recua</div>
+          </div>
+          <div class="balloon" id="ev-virada" style="left: 560px; top: 250px">
+            <div class="tag">2020 · VIRADA</div>
+            <div class="txt">Itaú perde 35% e o Bradesco volta a lucrar mais</div>
+          </div>
+          <div class="balloon" id="ev-2022" style="left: 560px; top: 250px">
+            <div class="tag">2022 · JUROS EM ALTA</div>
+            <div class="txt">Selic volta a 13,75%; BB bate recorde (R$ 31,8 bi) e passa o Itaú</div>
+          </div>
+          <div class="balloon" id="ev-2025a" style="left: 560px; top: 250px">
+            <div class="tag">2025 · SELIC A 15%</div>
+            <div class="txt">Maior juro desde 2006; Itaú renova recorde com R$ 46,8 bi</div>
+          </div>
+          <div class="balloon" id="ev-2025b" style="left: 560px; top: 384px">
+            <div class="tag">2025 · AGRO</div>
+            <div class="txt">Calote no agro derruba o lucro do BB em 45%</div>
+          </div>
+        </div>
+
+        <div id="caption-bar">
+          <p class="cap" id="cap1">Em 2000, Itaú, Bradesco e BB lucravam menos de R$ 2 bi cada.</p>
+          <p class="cap" id="cap2">Juros altos no início dos anos 2000: a Selic chega a 25% em 2002.</p>
+          <p class="cap" id="cap3">2008: crise global e fusões. Os três maiores já lucram mais de R$ 7 bi.</p>
+          <p class="cap" id="cap4">2015-16: na recessão, BB e Caixa despencam; Itaú e Bradesco resistem.</p>
+          <p class="cap" id="cap5">2020: na pandemia, o lucro dos cinco recua e a Selic vai a 2%.</p>
+          <p class="cap" id="cap6">2022: com juros a 13,75%, o BB bate recorde e supera o Itaú.</p>
+          <p class="cap" id="cap7">2025: Itaú renova recorde; BB perde 45% com o calote no agro.</p>
+          <p class="cap" id="cap8">Lidera: Itaú, R$ 46,8 bi. Em 2025, Bradesco cresce 26% e BB cai 45%.</p>
+        </div>
+
+        <p id="sources">
+          Fontes: balanços dos bancos, SEC, DIEESE, Agência Brasil, InfoMoney; Selic: Copom/BCB.
+          Lucro recorrente ou ajustado quando é a referência do banco. Valores nominais.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const NS = "http://www.w3.org/2000/svg";
+        const DUR = 30;
+
+        // Chart geometry (SVG viewBox units equal CSS pixels)
+        const X0 = 140;
+        const X1 = 1290;
+        const Y_TOP = 220;
+        const Y_BOT = 900;
+        const V_MAX = 50; // R$ bilhões
+        const S_MAX = 30; // Selic % a.a.
+        const xOf = (yr) => X0 + ((yr - 2000) / 25) * (X1 - X0);
+        const yOf = (v) => Y_BOT - (v / V_MAX) * (Y_BOT - Y_TOP);
+        const ySel = (s) => Y_BOT - (s / S_MAX) * (Y_BOT - Y_TOP);
+
+        // Lucro anual verificado (R$ bilhões nominais). Fontes em FONTES.md.
+        const BANKS = [
+          {
+            id: "itau",
+            color: "#EC7000",
+            pts: [
+              [2000, 1.918],
+              [2008, 10.0],
+              [2015, 23.8],
+              [2016, 22.2],
+              [2019, 28.363],
+              [2020, 18.536],
+              [2022, 30.786],
+              [2024, 41.4],
+              [2025, 46.8],
+            ],
+          },
+          {
+            id: "bb",
+            color: "#FCFC30",
+            pts: [
+              [2000, 0.974],
+              [2008, 8.8],
+              [2015, 11.594],
+              [2016, 7.171],
+              [2019, 17.848],
+              [2020, 13.884],
+              [2022, 31.815],
+              [2024, 37.9],
+              [2025, 20.685],
+            ],
+          },
+          {
+            id: "bradesco",
+            color: "#E0153F",
+            pts: [
+              [2000, 1.74],
+              [2008, 7.62],
+              [2015, 17.873],
+              [2016, 17.1],
+              [2019, 25.887],
+              [2020, 19.458],
+              [2022, 20.7],
+              [2024, 19.554],
+              [2025, 24.652],
+            ],
+          },
+          {
+            id: "caixa",
+            color: "#2F8FE0",
+            pts: [
+              [2008, 3.9],
+              [2015, 7.2],
+              [2016, 4.1],
+              [2019, 21.06],
+              [2020, 13.169],
+              [2022, 9.2],
+              [2024, 14.0],
+              [2025, 15.5],
+            ],
+          },
+          {
+            id: "santander",
+            color: "#FF2A2A",
+            pts: [
+              [2008, 2.4],
+              [2015, 6.624],
+              [2016, 7.3],
+              [2019, 14.55],
+              [2020, 13.849],
+              [2022, 12.9],
+              [2024, 13.872],
+              [2025, 15.6],
+            ],
+          },
+        ];
+
+        // Selic: meta vigente no fim de cada ano (% a.a.)
+        const SELIC = [
+          15.75, 19.0, 25.0, 16.5, 17.75, 18.0, 13.25, 11.25, 13.75, 8.75, 10.75, 11.0, 7.25, 10.0,
+          11.75, 14.25, 13.75, 7.0, 6.5, 4.5, 2.0, 9.25, 13.75, 11.75, 12.25, 15.0,
+        ];
+        const SELIC_UP = "#C084FC";
+        const SELIC_DOWN = "#22D3EE";
+
+        const DATA_YEARS = [2000, 2008, 2015, 2016, 2019, 2020, 2022, 2024, 2025];
+
+        // Accelerated timeline: holds on the key years, eased runs between them.
+        const KEYS = [
+          [0, 2000],
+          [2.6, 2000],
+          [6.4, 2008],
+          [9.0, 2008],
+          [12.2, 2016],
+          [14.4, 2016],
+          [16.4, 2020],
+          [18.9, 2020],
+          [20.1, 2022],
+          [22.5, 2022],
+          [24.5, 2025],
+          [DUR, 2025],
+        ];
+
+        const clamp01 = (v) => Math.min(1, Math.max(0, v));
+        const smooth = (p) => p * p * (3 - 2 * p);
+        const backOut = (k) => {
+          const c1 = 1.70158;
+          const c3 = c1 + 1;
+          return 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2);
+        };
+        const easeOutCubic = (k) => 1 - Math.pow(1 - k, 3);
+
+        function yearAt(t) {
+          if (t <= KEYS[0][0]) return KEYS[0][1];
+          for (let i = 0; i < KEYS.length - 1; i++) {
+            const t0 = KEYS[i][0];
+            const y0 = KEYS[i][1];
+            const t1 = KEYS[i + 1][0];
+            const y1 = KEYS[i + 1][1];
+            if (t <= t1) {
+              if (y0 === y1) return y0;
+              return y0 + (y1 - y0) * smooth((t - t0) / (t1 - t0));
+            }
+          }
+          return KEYS[KEYS.length - 1][1];
+        }
+
+        function timeOfYear(yr) {
+          for (let i = 0; i < KEYS.length - 1; i++) {
+            const t0 = KEYS[i][0];
+            const y0 = KEYS[i][1];
+            const t1 = KEYS[i + 1][0];
+            const y1 = KEYS[i + 1][1];
+            if (y1 > y0 && yr > y0 && yr <= y1) {
+              const target = (yr - y0) / (y1 - y0);
+              let lo = 0;
+              let hi = 1;
+              for (let k = 0; k < 40; k++) {
+                const mid = (lo + hi) / 2;
+                if (smooth(mid) < target) lo = mid;
+                else hi = mid;
+              }
+              return t0 + (t1 - t0) * hi;
+            }
+          }
+          return 0;
+        }
+
+        function valueAt(pts, yr) {
+          if (yr < pts[0][0] - 1e-9) return null;
+          for (let i = 0; i < pts.length - 1; i++) {
+            const a = pts[i][0];
+            const b = pts[i + 1][0];
+            if (yr <= b) {
+              return pts[i][1] + (pts[i + 1][1] - pts[i][1]) * ((yr - a) / (b - a));
+            }
+          }
+          return pts[pts.length - 1][1];
+        }
+
+        const fmt = (v) => (v < 1 ? v.toFixed(2) : v.toFixed(1)).replace(".", ",");
+        const fmtPct = (s) => s.toFixed(2).replace(".", ",") + "%";
+
+        function svg(tag, attrs, parent) {
+          const node = document.createElementNS(NS, tag);
+          for (const k in attrs) node.setAttribute(k, attrs[k]);
+          parent.appendChild(node);
+          return node;
+        }
+
+        // ---------- Static chart (built once from the data) ----------
+        const grid = document.getElementById("grid");
+        for (let v = 0; v <= V_MAX; v += 10) {
+          svg(
+            "line",
+            {
+              x1: X0,
+              x2: X1,
+              y1: yOf(v),
+              y2: yOf(v),
+              stroke: v === 0 ? "rgba(244,246,251,0.45)" : "rgba(244,246,251,0.08)",
+              "stroke-width": v === 0 ? 2 : 1,
+            },
+            grid,
+          );
+          const t = svg(
+            "text",
+            {
+              x: X0 - 16,
+              y: yOf(v) + 7,
+              "text-anchor": "end",
+              fill: "#AEB9CF",
+              "font-size": 20,
+              "font-weight": 700,
+            },
+            grid,
+          );
+          t.textContent = String(v);
+        }
+        const unitL = svg(
+          "text",
+          { x: X0 - 16, y: Y_TOP - 22, "text-anchor": "end", fill: "#AEB9CF", "font-size": 18 },
+          grid,
+        );
+        unitL.textContent = "R$ bi";
+
+        // Right (Selic) axis
+        const SEL_TICKS = [];
+        svg(
+          "line",
+          {
+            x1: X1,
+            x2: X1,
+            y1: Y_TOP,
+            y2: Y_BOT,
+            stroke: "rgba(192,132,252,0.45)",
+            "stroke-width": 2,
+            "stroke-dasharray": "6 6",
+          },
+          grid,
+        );
+        for (let s = 0; s <= S_MAX; s += 10) {
+          svg(
+            "line",
+            { x1: X1, x2: X1 + 8, y1: ySel(s), y2: ySel(s), stroke: "#C084FC", "stroke-width": 2 },
+            grid,
+          );
+          const t = svg(
+            "text",
+            {
+              x: X1 + 14,
+              y: ySel(s) + 7,
+              "text-anchor": "start",
+              fill: "#D8B4FE",
+              "font-size": 20,
+              "font-weight": 700,
+            },
+            grid,
+          );
+          t.textContent = s + "%";
+          SEL_TICKS.push({ el: t, y: ySel(s) });
+        }
+
+        // X axis: a tick per year, labels only on the key years
+        for (let yr = 2000; yr <= 2025; yr++) {
+          svg(
+            "line",
+            {
+              x1: xOf(yr),
+              x2: xOf(yr),
+              y1: Y_BOT,
+              y2: Y_BOT + 8,
+              stroke: "rgba(244,246,251,0.35)",
+              "stroke-width": 2,
+            },
+            grid,
+          );
+        }
+        const KEY_LABELS = [
+          { id: "k2000", text: "2000", x: xOf(2000) },
+          { id: "k2008", text: "2008", x: xOf(2008) },
+          { id: "k2015", text: "2015-16", x: xOf(2015.5) },
+          { id: "k2020", text: "2020", x: xOf(2020) },
+          { id: "k2022", text: "2022", x: xOf(2022) },
+          { id: "k2025", text: "2025", x: xOf(2025) },
+        ];
+        KEY_LABELS.forEach((k) => {
+          const t = svg(
+            "text",
+            {
+              id: k.id,
+              x: k.x,
+              y: Y_BOT + 36,
+              "text-anchor": "middle",
+              fill: "#AEB9CF",
+              "font-size": 21,
+              "font-weight": 700,
+            },
+            grid,
+          );
+          t.textContent = k.text;
+        });
+
+        // Key-year guides
+        const guides = document.getElementById("guides");
+        const GUIDE_YEARS = [2000, 2008, 2020, 2022, 2025];
+        GUIDE_YEARS.forEach((yr) => {
+          svg(
+            "line",
+            {
+              id: "g" + yr,
+              x1: xOf(yr),
+              x2: xOf(yr),
+              y1: Y_TOP,
+              y2: Y_BOT,
+              stroke: "#F5C542",
+              "stroke-width": 2,
+              "stroke-dasharray": "4 7",
+              opacity: 0,
+            },
+            guides,
+          );
+        });
+        svg(
+          "rect",
+          {
+            id: "g2015",
+            x: xOf(2015),
+            y: Y_TOP,
+            width: xOf(2016) - xOf(2015),
+            height: Y_BOT - Y_TOP,
+            fill: "#F5C542",
+            opacity: 0,
+          },
+          guides,
+        );
+
+        // Selic dashed line, colored per yearly segment by direction
+        const selicG = document.getElementById("selic-g");
+        for (let i = 0; i < SELIC.length - 1; i++) {
+          const up = SELIC[i + 1] >= SELIC[i];
+          svg(
+            "line",
+            {
+              x1: xOf(2000 + i),
+              y1: ySel(SELIC[i]),
+              x2: xOf(2001 + i),
+              y2: ySel(SELIC[i + 1]),
+              stroke: up ? SELIC_UP : SELIC_DOWN,
+              "stroke-width": 4,
+              "stroke-dasharray": "11 8",
+              "stroke-linecap": "round",
+            },
+            selicG,
+          );
+        }
+
+        // Bank lines with a soft glow and a dot on every verified data point
+        const banksG = document.getElementById("banks-g");
+        BANKS.forEach((b) => {
+          const d = b.pts.map((p, i) => (i ? "L" : "M") + xOf(p[0]) + " " + yOf(p[1])).join(" ");
+          svg(
+            "path",
+            {
+              d: d,
+              fill: "none",
+              stroke: b.color,
+              "stroke-width": 14,
+              "stroke-opacity": 0.16,
+              "stroke-linejoin": "round",
+              "stroke-linecap": "round",
+            },
+            banksG,
+          );
+          svg(
+            "path",
+            {
+              d: d,
+              fill: "none",
+              stroke: b.color,
+              "stroke-width": 5,
+              "stroke-linejoin": "round",
+              "stroke-linecap": "round",
+            },
+            banksG,
+          );
+          b.pts.forEach((p) => {
+            svg(
+              "circle",
+              {
+                cx: xOf(p[0]),
+                cy: yOf(p[1]),
+                r: 6,
+                fill: b.color,
+                stroke: "#0B1630",
+                "stroke-width": 2.5,
+              },
+              banksG,
+            );
+          });
+        });
+
+        // Moving tips and leader lines
+        const tipsG = document.getElementById("tips");
+        const leadersG = document.getElementById("leaders");
+        BANKS.forEach((b) => {
+          b.tip = svg(
+            "circle",
+            { r: 9, fill: b.color, stroke: "#F4F6FB", "stroke-width": 3, opacity: 0 },
+            tipsG,
+          );
+          b.leader = svg(
+            "line",
+            { stroke: b.color, "stroke-width": 2, "stroke-opacity": 0.7, opacity: 0 },
+            leadersG,
+          );
+          b.label = document.getElementById("lbl-" + b.id);
+          b.valEl = document.getElementById("val-" + b.id);
+          b.years = b.pts.map((p) => p[0]);
+          b.lastText = "";
+        });
+        const selicTip = svg(
+          "circle",
+          { r: 8, fill: SELIC_UP, stroke: "#F4F6FB", "stroke-width": 3, opacity: 0 },
+          tipsG,
+        );
+
+        // Pulse rings at the Selic peaks and troughs
+        const ringsBox = document.getElementById("rings");
+        const RINGS = [
+          { yr: 2002, cls: "" },
+          { yr: 2015, cls: "" },
+          { yr: 2020, cls: "down" },
+          { yr: 2025, cls: "" },
+        ];
+        RINGS.forEach((r) => {
+          r.at = timeOfYear(r.yr);
+          r.el = document.createElement("div");
+          r.el.className = "ring " + r.cls;
+          r.el.style.left = xOf(r.yr) + "px";
+          r.el.style.top = ySel(SELIC[r.yr - 2000]) + "px";
+          ringsBox.appendChild(r.el);
+        });
+
+        // Coin stack (one coin per R$ 4 bi of combined annual profit)
+        const COIN_STEP = 12;
+        const COIN_PER = 4;
+        const JITTER = [0, 3, -2, 4, -3, 1, -1, 2, -4, 3, 0, -2];
+        const TOT = {};
+        DATA_YEARS.forEach((yr) => {
+          let s = 0;
+          BANKS.forEach((b) => {
+            const v = valueAt(b.pts, yr);
+            if (v !== null) s += v;
+          });
+          TOT[yr] = s;
+        });
+        const COUNT = {};
+        DATA_YEARS.forEach((yr) => {
+          COUNT[yr] = Math.max(1, Math.round(TOT[yr] / COIN_PER));
+        });
+        const MAX_COINS = Math.max(...DATA_YEARS.map((yr) => COUNT[yr]));
+        const stack = document.getElementById("coin-stack");
+        const coins = [];
+        for (let i = 0; i < MAX_COINS; i++) {
+          const c = document.createElement("div");
+          c.className = "coin";
+          c.style.bottom = i * COIN_STEP + "px";
+          c.style.left = 55 + JITTER[i % JITTER.length] + "px";
+          c.innerHTML = '<div class="edge"></div><div class="face"></div>';
+          stack.appendChild(c);
+          coins.push(c);
+        }
+        const coinValue = document.getElementById("coin-value");
+        const coinYear = document.getElementById("coin-year");
+        const coinNote = document.getElementById("coin-note");
+        const yearNum = document.getElementById("year-num");
+        const selicValue = document.getElementById("selic-value");
+        const revealRect = document.getElementById("reveal-rect");
+
+        const T_REACH = {};
+        DATA_YEARS.forEach((yr) => {
+          T_REACH[yr] = yr === 2000 ? 1.2 : timeOfYear(yr);
+        });
+
+        let lastYearText = "";
+        let lastSelicText = "";
+        let lastCoinYear = -1;
+
+        // ---------- Single driver: every frame is a pure function of t ----------
+        function apply(t) {
+          const yr = yearAt(t);
+          const x = xOf(yr);
+          revealRect.setAttribute("width", Math.max(0, x - 100 + 1));
+
+          // Year counter
+          const yText = String(Math.floor(yr + 1e-6));
+          if (yText !== lastYearText) {
+            yearNum.textContent = yText;
+            lastYearText = yText;
+          }
+
+          // Selic tip and readout
+          const sIdx = Math.min(SELIC.length - 2, Math.max(0, Math.ceil(yr - 2000 - 1e-6) - 1));
+          const sFloat = valueAt(
+            SELIC.map((s, i) => [2000 + i, s]),
+            yr,
+          );
+          const up = SELIC[sIdx + 1] >= SELIC[sIdx];
+          const sColor = up ? SELIC_UP : SELIC_DOWN;
+          const introSel = clamp01((t - 0.5) / 0.4);
+          selicTip.setAttribute("cx", x);
+          selicTip.setAttribute("cy", ySel(sFloat));
+          selicTip.setAttribute("fill", sColor);
+          selicTip.setAttribute("opacity", introSel);
+          const sYi = Math.floor(yr - 2000 + 1e-6);
+          const sNow = SELIC[sYi];
+          let sText = fmtPct(sNow);
+          let rColor = "#D8B4FE";
+          if (sYi > 0) {
+            const rose = sNow >= SELIC[sYi - 1];
+            sText += rose ? " ▲" : " ▼";
+            rColor = rose ? SELIC_UP : SELIC_DOWN;
+          }
+          if (sText !== lastSelicText) {
+            selicValue.textContent = sText;
+            selicValue.style.color = rColor;
+            lastSelicText = sText;
+          }
+
+          // Selic pulses at peaks and troughs: three rings, a pure function of t
+          RINGS.forEach((r) => {
+            const e = t - r.at;
+            if (e < 0 || e >= 2.55) {
+              r.el.style.opacity = 0;
+              return;
+            }
+            const k = (e % 0.85) / 0.85;
+            const eased = 1 - Math.pow(1 - k, 2);
+            r.el.style.opacity = 0.95 * (1 - eased);
+            r.el.style.transform = "scale(" + (0.4 + 2.4 * eased) + ")";
+          });
+
+          // Bank tips, values and labels
+          const items = [];
+          BANKS.forEach((b) => {
+            const v = valueAt(b.pts, yr);
+            if (v === null) {
+              b.tip.setAttribute("opacity", 0);
+              b.leader.setAttribute("opacity", 0);
+              b.label.style.opacity = 0;
+              return;
+            }
+            const tipY = yOf(v);
+            const startT = b.pts[0][0] === 2000 ? 0.9 : T_REACH[b.pts[0][0]];
+            const k = clamp01((t - startT) / 0.45);
+            const pop = k <= 0 ? 0 : backOut(k);
+            b.tip.setAttribute("cx", x);
+            b.tip.setAttribute("cy", tipY);
+            b.tip.setAttribute("opacity", k > 0 ? 1 : 0);
+            b.tip.setAttribute("r", 9 * Math.max(0, pop));
+
+            // Value text only near a verified data year (never an interpolated number)
+            let ny = b.years[0];
+            for (let i = 0; i < b.years.length; i++) {
+              if (Math.abs(b.years[i] - yr) < Math.abs(ny - yr)) ny = b.years[i];
+            }
+            const dist = Math.abs(ny - yr);
+            const valOp = clamp01(1 - (dist - 0.12) / 0.2);
+            const txt = fmt(valueAt(b.pts, ny));
+            if (txt !== b.lastText) {
+              b.valEl.textContent = txt;
+              b.lastText = txt;
+            }
+            b.valEl.style.opacity = valOp;
+            items.push({ b: b, anchor: tipY, k: k, pop: pop });
+          });
+
+          // Keep labels from overlapping: sort by tip height, enforce a 40px gap
+          items.sort((a, c) => a.anchor - c.anchor);
+          const GAP = 42;
+          const pos = items.map((it) => it.anchor);
+          for (let i = 0; i < pos.length; i++) {
+            if (i === 0) pos[i] = Math.max(pos[i], Y_TOP + 20);
+            else pos[i] = Math.max(pos[i], pos[i - 1] + GAP);
+          }
+          for (let i = pos.length - 1; i >= 0; i--) {
+            if (i === pos.length - 1) pos[i] = Math.min(pos[i], Y_BOT - 26);
+            else pos[i] = Math.min(pos[i], pos[i + 1] - GAP);
+          }
+          const LX = x + 58;
+          items.forEach((it, i) => {
+            const b = it.b;
+            b.label.style.transform =
+              "translate(" + LX + "px," + (pos[i] - 18) + "px) scale(" + Math.max(0, it.pop) + ")";
+            b.label.style.transformOrigin = "0% 50%";
+            b.label.style.opacity = it.k > 0 ? 1 : 0;
+            b.leader.setAttribute("x1", x + 10);
+            b.leader.setAttribute("y1", it.anchor);
+            b.leader.setAttribute("x2", LX - 6);
+            b.leader.setAttribute("y2", pos[i]);
+            b.leader.setAttribute("opacity", it.k);
+          });
+
+          // Selic axis numbers step aside while a bank label passes over them
+          SEL_TICKS.forEach((tk) => {
+            let hidden = false;
+            pos.forEach((py) => {
+              if (LX < X1 + 64 && LX + 260 > X1 + 10 && Math.abs(py - tk.y) < 30) hidden = true;
+            });
+            tk.el.setAttribute("opacity", hidden ? 0 : 1);
+          });
+
+          // Coin stack: changes only when a verified data year is reached
+          let dy = DATA_YEARS[0];
+          for (let i = 0; i < DATA_YEARS.length; i++) {
+            if (yr >= DATA_YEARS[i] - 1e-6) dy = DATA_YEARS[i];
+          }
+          const di = DATA_YEARS.indexOf(dy);
+          const prevCount = di === 0 ? 0 : COUNT[DATA_YEARS[di - 1]];
+          const newCount = COUNT[dy];
+          const elapsed = t - T_REACH[dy];
+          const diff = Math.abs(newCount - prevCount);
+          const stagger = diff > 0 ? Math.min(0.06, 0.5 / diff) : 0;
+          for (let i = 0; i < coins.length; i++) {
+            const c = coins[i];
+            let op = 0;
+            let off = 0;
+            if (i < Math.min(prevCount, newCount)) {
+              op = 1;
+            } else if (newCount > prevCount && i >= prevCount && i < newCount) {
+              const kk = clamp01((elapsed - (i - prevCount) * stagger) / 0.32);
+              op = kk > 0 ? 1 : 0;
+              off = -(1 - easeOutCubic(kk)) * 140;
+            } else if (newCount < prevCount && i >= newCount && i < prevCount) {
+              const kk = clamp01((elapsed - (prevCount - 1 - i) * stagger) / 0.3);
+              op = 1 - kk;
+              off = -kk * 40;
+            }
+            c.style.opacity = op;
+            c.style.transform = "translateY(" + off + "px)";
+          }
+
+          // Combined value flips in when the data year is reached
+          if (dy !== lastCoinYear) {
+            coinValue.textContent = "R$ " + fmt(TOT[dy]) + " bi" + (dy === 2000 ? "*" : "");
+            coinYear.textContent = "em " + dy;
+            lastCoinYear = dy;
+          }
+          const flip = clamp01(elapsed / 0.3);
+          const panelIntro = clamp01((t - 0.8) / 0.4);
+          coinValue.style.opacity = Math.min(flip, panelIntro);
+          coinValue.style.transform = "translateY(" + (1 - easeOutCubic(flip)) * 8 + "px)";
+          coinNote.style.opacity = dy === 2000 ? panelIntro : 0;
+        }
+
+        // ---------- Timeline ----------
+        const tl = gsap.timeline({ paused: true });
+        const drive = { t: 0 };
+        apply(0);
+        tl.to(
+          drive,
+          {
+            t: DUR,
+            duration: DUR,
+            ease: "none",
+            onUpdate: function () {
+              apply(drive.t);
+            },
+          },
+          0,
+        );
+
+        // Intro
+        tl.fromTo(
+          "#title",
+          { opacity: 0, y: 26 },
+          { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+          0.1,
+        );
+        tl.fromTo(
+          "#subtitle",
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+          0.3,
+        );
+        tl.fromTo("#grid", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.2);
+        tl.fromTo(
+          "#year-block",
+          { opacity: 0, y: -16 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+          0.3,
+        );
+        tl.fromTo(
+          "#selic-readout",
+          { opacity: 0, y: -12 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+          0.5,
+        );
+        tl.fromTo(
+          ["#coin-label", "#coin-year"],
+          { opacity: 0 },
+          { opacity: 1, duration: 0.4, ease: "power2.out" },
+          0.8,
+        );
+
+        // Key years light up (axis label + guide) when the playhead reaches them
+        const KEY_TIMES = [
+          { label: "#k2000", guide: "#g2000", at: 0.6 },
+          { label: "#k2008", guide: "#g2008", at: T_REACH[2008] },
+          { label: "#k2015", guide: "#g2015", at: T_REACH[2015], band: true },
+          { label: "#k2020", guide: "#g2020", at: T_REACH[2020] },
+          { label: "#k2022", guide: "#g2022", at: T_REACH[2022] },
+          { label: "#k2025", guide: "#g2025", at: T_REACH[2025] },
+        ];
+        KEY_TIMES.forEach((k) => {
+          tl.to(k.label, { fill: "#F5C542", duration: 0.3, ease: "power2.out" }, k.at);
+          tl.fromTo(
+            k.label,
+            { scale: 1 },
+            {
+              scale: 1.25,
+              duration: 0.25,
+              ease: "power2.out",
+              yoyo: true,
+              repeat: 1,
+              transformOrigin: "50% 50%",
+            },
+            k.at,
+          );
+          const peak = k.band ? 0.12 : 0.6;
+          const rest = k.band ? 0.05 : 0.2;
+          tl.fromTo(k.guide, { opacity: 0 }, { opacity: peak, duration: 0.35 }, k.at);
+          tl.to(k.guide, { opacity: rest, duration: 0.8, ease: "power1.out" }, k.at + 1.6);
+        });
+
+        // Event balloons with arrow connectors
+        const connectors = document.getElementById("connectors");
+        const EVENTS = [
+          { id: "ev-banespa", at: 0.9, out: 3.2, from: [236, 372], to: [xOf(2000) + 4, Y_BOT - 8] },
+          {
+            id: "ev-selic25",
+            at: timeOfYear(2002),
+            out: 6.2,
+            from: [330, 300],
+            to: [xOf(2002) + 8, ySel(25) + 2],
+          },
+          { id: "ev-fusoes", at: 6.5, out: 9.0, from: [640, 300], to: [xOf(2008) + 6, yOf(10.0) - 8] },
+          { id: "ev-crise", at: 6.9, out: 9.0, from: [640, 434], to: [xOf(2008) + 8, yOf(7.62)] },
+          {
+            id: "ev-recessao",
+            at: timeOfYear(2015),
+            out: 14.3,
+            from: [770, 300],
+            to: [xOf(2015) - 4, ySel(14.25) - 8],
+          },
+          { id: "ev-queda16", at: 12.3, out: 14.3, from: [770, 434], to: [xOf(2016) - 8, yOf(7.171) - 6] },
+          { id: "ev-covid", at: 16.5, out: 18.8, from: [980, 500], to: [xOf(2020) - 6, ySel(2.0) - 10] },
+          { id: "ev-virada", at: 16.9, out: 18.8, from: [1030, 300], to: [xOf(2020) - 6, yOf(18.536) - 8] },
+          { id: "ev-2022", at: 20.2, out: 22.4, from: [1030, 300], to: [xOf(2022) - 8, yOf(31.815) - 4] },
+          { id: "ev-2025a", at: 24.6, out: null, from: [1030, 290], to: [xOf(2025) - 10, yOf(46.8) + 2] },
+          { id: "ev-2025b", at: 25.2, out: null, from: [1030, 434], to: [xOf(2025) - 10, yOf(20.685)] },
+        ];
+        EVENTS.forEach((ev) => {
+          const g = svg("g", { opacity: 0 }, connectors);
+          const len = Math.hypot(ev.to[0] - ev.from[0], ev.to[1] - ev.from[1]);
+          const line = svg(
+            "line",
+            {
+              x1: ev.from[0],
+              y1: ev.from[1],
+              x2: ev.to[0],
+              y2: ev.to[1],
+              stroke: "#F5C542",
+              "stroke-width": 2.5,
+              "marker-end": "url(#arrow)",
+              "stroke-dasharray": len + " " + len,
+              "stroke-dashoffset": len,
+            },
+            g,
+          );
+          svg("circle", { cx: ev.from[0], cy: ev.from[1], r: 4, fill: "#F5C542" }, g);
+          const box = document.getElementById(ev.id);
+          tl.fromTo(
+            box,
+            { opacity: 0, y: 14, scale: 0.96 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(1.6)" },
+            ev.at,
+          );
+          tl.fromTo(g, { opacity: 0 }, { opacity: 1, duration: 0.2 }, ev.at + 0.15);
+          tl.fromTo(
+            line,
+            { strokeDashoffset: len },
+            { strokeDashoffset: 0, duration: 0.45, ease: "power2.out" },
+            ev.at + 0.15,
+          );
+          if (ev.out !== null) {
+            tl.to(box, { opacity: 0, y: -10, duration: 0.3, ease: "power2.in" }, ev.out);
+            tl.to(g, { opacity: 0, duration: 0.3, ease: "power2.in" }, ev.out);
+          }
+        });
+
+        // On-screen narration
+        const CAPS = [
+          ["#cap1", 0.5, 3.4],
+          ["#cap2", 3.6, 6.3],
+          ["#cap3", 6.5, 10.6],
+          ["#cap4", 10.8, 15.0],
+          ["#cap5", 15.2, 18.8],
+          ["#cap6", 19.0, 23.2],
+          ["#cap7", 23.4, 26.8],
+          ["#cap8", 27.0, null],
+        ];
+        CAPS.forEach((c) => {
+          tl.fromTo(
+            c[0],
+            { opacity: 0, y: 18 },
+            { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" },
+            c[1],
+          );
+          if (c[2] !== null) {
+            tl.to(c[0], { opacity: 0, y: -12, duration: 0.25, ease: "power2.in" }, c[2]);
+          }
+        });
+
+        // Final ranking and sources
+        tl.fromTo(
+          ["#rank-itau", "#rank-bradesco", "#rank-bb", "#rank-santander", "#rank-caixa"],
+          { opacity: 0, x: -8 },
+          { opacity: 1, x: 0, duration: 0.35, ease: "power3.out", stagger: 0.08 },
+          27.2,
+        );
+        tl.fromTo(
+          "#sources",
+          { opacity: 0, y: 8 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+          26.9,
+        );
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
