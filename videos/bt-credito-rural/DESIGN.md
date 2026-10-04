@@ -33,6 +33,14 @@ Tom: humano, confiável, elegante, técnico, próximo, moderno.
 Progressão: navy + verde + branco (abertura) → + dourado (escalada) → navy + vermelho + branco
 (explosão) → navy + oliva + warm white + dourado discreto (marca).
 
+## Contexto rural: bananal (v2)
+
+Bananicultura irrigada (região de Jaíba). Bananeira real, nunca folhagem tropical genérica: pseudocaule
+verde-marrom com manchas escuras e bainhas secas, folhas de 1,5 a 2,2 m com nervura central clara e
+rasgos de vento, folhas velhas amarelando e secas penduradas, cachos verdes. Crepúsculo navy com
+contraluz dourado discreto, névoa que se dissolve no fundo navy da composição. O bananal é camada de
+contexto: os números continuam protagonistas.
+
 ## Tipografia
 
 - Títulos e números heróis: **Bodoni Moda** (Bodoni do Google Fonts, variável wght 400 a 900,

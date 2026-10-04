@@ -257,20 +257,22 @@
             return (x >>> 0) / 4294967295;
           }
 
-          // lavoura calma ao pe da tela (eco da abertura, agora sob controle)
-          const fieldCtx = $("rs-field").getContext("2d");
+          // borda do bananal ao pe da tela, em contraluz dourado (eco da abertura, agora sob controle)
+          const ROWS = [-12.25, -8.75, -5.25, -1.75, 1.75, 5.25, 8.75, 12.25];
+          const grove = window.BTGrove.create($("rs-field"), { seed: 11, rows: ROWS, zFrom: 30, zTo: -110, sprinklers: false });
           function drawField(t) {
-            window.BTField.draw(fieldCtx, {
-              pos: 3 + 0.55 * t,
-              vel: 0.55,
-              hy: 1500,
-              camH: 0.82,
-              camX: 0.12 * Math.sin(t * 0.6),
-              fade: 1,
-              press: 0,
-              glow: [212, 167, 124],
-              glowA: 0.24,
-              particles: false,
+            const z = -40 + 0.45 * t;
+            grove.render({
+              eye: [27, 1.0, z],
+              target: [17, 1.0 + 10 * Math.tan(0.47), z - 1.2],
+              fov: 52,
+              time: 3 + t,
+              exposure: 1.2,
+              fogAlpha: true,
+              fogD: 0.03,
+              sun: [-1, 0.14, 0.25],
+              sunCol: [0.62, 0.45, 0.28],
+              maxD: 70,
             });
           }
 

@@ -10,13 +10,27 @@ determinístico). Tema: crédito rural, escalada da dívida e perda de controle 
 | `index.html`                                          | Raiz: duas cenas (sub-composições) e cinco faixas de áudio               |
 | `compositions/debt-world.html`                        | Cena 1 (0 a 11,2 s): rush, escalada, pressão, parede, congelamento       |
 | `compositions/resolve.html`                           | Cena 2 (11,2 a 15,5 s): "Crédito rural exige análise." e tela de marca   |
-| `assets/js/bt-field.js`                               | Lavoura em canvas (função pura do tempo), usada pelas duas cenas         |
+| `assets/js/bt-grove.js`                               | Bananal 3D em WebGL2 (função pura do tempo e da câmera), nas duas cenas  |
 | `assets/audio/*.wav`                                  | Narração (3 clipes), trilha e efeitos calibrados (gerados pelos scripts) |
 | `assets/audio/source/`                                | Narração tratada (gerada por `tts.py`, entrada do `sound_design.py`)     |
 | `assets/brand/bt-logo-white.png`                      | Logo oficial enviado pelo cliente, sem alterações                        |
 | `assets/fonts/`                                       | Bodoni Moda, Montserrat e Inter (woff2 local, sem rede no render)        |
 | `scripts/`                                            | Geração reprodutível de narração, trilha, efeitos e texturas             |
 | `BRIEF.md`, `DESIGN.md`, `SCRIPT.md`, `STORYBOARD.md` | Briefing, regras de marca, narração e batidas                            |
+
+## Bananal (v2)
+
+O contexto rural é um bananal 3D procedural em WebGL2 (`assets/js/bt-grove.js`), modelado a partir
+das fotos de referência enviadas pelo cliente: pseudocaule manchado formado por bainhas, roseta de
+folhas longas com nervura central, rasgos de vento e translucidez contra a luz, folha-bandeira,
+folhas secas penduradas, mudas na base, cachos verdes com coração roxo, palhada no solo e linha de
+microaspersores, em fileiras de 3,5 m. A cena 1 é um travelling pelo corredor entre duas fileiras
+(camada nítida `#dw-field` e camada rente à lente `#dw-near`, desfocada e recuada no centro para
+não cobrir os números). A cena 2 mostra a borda do bananal em contraluz no pé da tela.
+
+As fotos de referência não são embutidas no vídeo: têm origem e licença desconhecidas, e uma delas
+traz marca d'água de banco de imagens. Com fotos próprias ou licenciadas, dá para acrescentar camadas
+fotográficas sem mudar a estrutura.
 
 ## Renderizar
 

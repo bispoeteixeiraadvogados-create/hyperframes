@@ -13,14 +13,14 @@ mode: autonomous
 - src: compositions/debt-world.html
 - duration: 11.2s
 - transition_in: cut
-- scene: Rush sobre a lavoura, R$ 10.000 em foco, escalada até R$ 22.390, parede de números, congelamento.
+- scene: Rush pelo corredor do bananal, R$ 10.000 em foco, escalada até R$ 22.390, parede de números, congelamento.
 - voiceover: "Quando a dívida cresce mais rápido que a sua capacidade de pagamento, o problema deixa de ser apenas o valor da parcela. É preciso entender o que está fazendo essa dívida crescer."
 - poster: 4.6
 - rules: counting-dynamic-scale, camera-with-intent (Z push), staged reveals, sequenced UI life (contador e microdados), scale-burst exit
 
 Batidas (tempo absoluto):
 
-- 0,00 a 0,52: câmera rente à copa da soja, folhas cruzando a lente, partículas de velocidade; foco duro.
+- 0,00 a 0,52: câmera atravessa folhas de bananeira rente à lente e entra no corredor do bananal, foco puxado.
 - 0,56 "dívida": R$ 10.000 (click), rótulo SALDO DEVEDOR. Pequeno, estável, controlado.
 - 1,00 "cresce": a moldura dourada da CAPACIDADE DE PAGAMENTO se desenha; indicador ▲ 0,0%.
 - 1,68 "rápido": R$ 11.200 (PUM, contador rolando, eco contornado, onda de choque, câmera avança).
@@ -52,4 +52,4 @@ Batidas (tempo absoluto):
 - 13,12: o título sobe; 13,32 sting de marca; 13,42 logo oficial Bispo & Teixeira entra.
 - 13,75: "Está enfrentando dificuldades com seu crédito rural?"
 - 14,20: "Fale com nossa equipe."
-- até 15,50: aproximação lenta; lavoura calma ao pé da tela (eco da abertura, agora sob controle).
+- até 15,50: aproximação lenta; borda do bananal em contraluz ao pé da tela (eco da abertura, agora sob controle).

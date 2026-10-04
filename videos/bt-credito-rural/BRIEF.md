@@ -45,11 +45,21 @@ explosão da dívida NAVY + VERMELHO + BRANCO. Vermelho é funcional (alerta), n
 - Sem abertura com logo, sem paisagem lenta, sem fazendeiro sorrindo, sem trator como clichê.
 - Sem botão gigante de WhatsApp, sem linguagem agressiva de vendas.
 - O ambiente de produção não tinha acesso a bancos de imagem, geração de imagem nem TTS premium.
-  O contexto rural foi construído com grafismo procedural (lavoura em perspectiva desenhada em
-  canvas, curvas de nível, irrigação, documento de cédula rural). A narração foi sintetizada
+  O contexto rural foi construído com grafismo procedural: na v2, um bananal 3D em WebGL2
+  modelado a partir das fotos de referência do cliente, mais curvas de nível, irrigação e
+  documento de cédula rural. A narração foi sintetizada
   offline com Kokoro (voz pm_alex), validada por transcrição automática (Whisper e Parakeet,
   0% de erro). Recomenda-se substituir por locução humana antes da veiculação paga.
 - Decisão de ritmo: a narração completa soma cerca de 12,5 s. Para caber em ~15 s com o
   congelamento silencioso, a frase 2 acompanha a parede de números (como na STR) e o
   congelamento acontece logo após "crescer", por volta de 10,7 s. A frase 3 vira a mensagem
   central pós-congelamento e permanece como título da tela de marca.
+
+## Revisão v2 (bananal)
+
+- Pedido: manter conceito, estrutura, duração, ritmo, narração e escalada; trocar o contexto rural
+  genérico por um bananal realista (plantas, folhas, fileiras), sem roubar o foco dos números.
+- Referências: 7 imagens enviadas pelo cliente (bananal jovem, corredor irrigado com
+  microaspersores, fileiras em estrada de terra, cachos, planta isolada, folhas rasgadas, esquema
+  anatômico). Usadas como referência de forma, cor e densidade, não embutidas no vídeo (licença
+  desconhecida; uma tem marca d'água de banco de imagens).
