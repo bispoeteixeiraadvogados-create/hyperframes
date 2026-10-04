@@ -687,7 +687,7 @@ void main() {
   // ------------------------------------------------------------------ instancia
   function create(canvas, cfg) {
     const gl = canvas.getContext("webgl2", {
-      antialias: true,
+      antialias: cfg.antialias !== false,
       alpha: true,
       premultipliedAlpha: true,
       preserveDrawingBuffer: true,

@@ -698,9 +698,9 @@
         <div data-hf-id="hf-58sr" id="dw-burst">
           <div data-hf-id="hf-4bt8" id="dw-cam">
             <div data-hf-id="hf-7vev" id="dw-shake">
-              <canvas data-hf-id="hf-kmsg" id="dw-field" width="1080" height="1920"></canvas>
+              <canvas data-hf-id="hf-kmsg" id="dw-field" width="810" height="1440"></canvas>
               <div data-hf-id="hf-qqde" id="dw-contours"><img data-hf-id="hf-0wnq" src="assets/textures/contours.svg" alt=""></div>
-              <canvas id="dw-near" width="1080" height="1920" data-layout-ignore=""></canvas>
+              <canvas id="dw-near" width="360" height="640" data-layout-ignore=""></canvas>
               <div data-hf-id="hf-2225" id="dw-cols" data-layout-ignore=""></div>
               <svg data-hf-id="hf-4ixt" id="dw-lines" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
                 <path data-hf-id="hf-jv9j" id="dw-line1" stroke="#e5333f" stroke-width="5" d="" />
@@ -852,7 +852,8 @@
           // ----------------------------------------------------------------- camera no bananal
           // Travelling 3D pelo corredor entre duas fileiras de bananeira (3,5 m). O avanco usa a
           // mesma curva da versao anterior: rush inicial, empurrao a cada golpe e aceleracao na pressao.
-          // Duas camadas do mesmo plantio: #dw-field (nitida) e #dw-near (rente a lente, desfocada).
+          // Duas camadas do mesmo plantio: #dw-field (nitida, 75% da resolucao) e #dw-near (rente a
+          // lente, desfocada, 1/3 da resolucao). O CSS amplia ambas para 1080x1920.
           const ROWS = [-12.25, -8.75, -5.25, -1.75, 1.75, 5.25, 8.75, 12.25];
           const PUSH = [
             // folhas atravessando o corredor na altura da lente: a camera abre caminho por elas
@@ -866,7 +867,7 @@
           const canvas = $("dw-field");
           const nearCanvas = $("dw-near");
           const grove = window.BTGrove.create(canvas, GROVE);
-          const groveNear = window.BTGrove.create(nearCanvas, GROVE);
+          const groveNear = window.BTGrove.create(nearCanvas, Object.assign({ antialias: false }, GROVE));
           function fieldPos(t) {
             let p = 70 * 0.16 * (1 - Math.exp(-t / 0.16)) + 1.15 * t;
             const burst = [0, 4.5, 6.5, 8.5, 14];
@@ -1150,7 +1151,7 @@
           // 17.640: rompe a moldura (primeiro vermelho, como acento)
           tl.set("#dw-frame .edge", { backgroundColor: RED }, T.b[3]);
           tl.set("#dw-cur", { color: RED }, T.b[3]);
-          tl.set("#dw-delta", { color: RED }, T.b[3]);
+          tl.set("#dw-delta", { color: "#ec5a63" }, T.b[3]);
           tl.to("#dw-frame .e-top", { y: -170, rotation: -7, opacity: 0, duration: 0.55, ease: "power2.out" }, T.b[3]);
           tl.to("#dw-frame .e-bottom", { y: 170, rotation: 6, opacity: 0, duration: 0.55, ease: "power2.out" }, T.b[3]);
           tl.to("#dw-frame .e-left", { x: -230, rotation: -14, opacity: 0, duration: 0.55, ease: "power2.out" }, T.b[3]);
