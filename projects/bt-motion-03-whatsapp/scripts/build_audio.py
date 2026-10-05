@@ -8,7 +8,7 @@ Determinístico (semente fixa). Três fontes:
      glitch e impacto vêm do pacote de SFX do skill media-use (licença Pixabay, ver CREDITS.md).
 
 Uso:
-  python3 scripts/build_audio.py <pasta_com_vozes_t1..t12.wav> /tmp/mix.wav
+  python3 scripts/build_audio.py <pasta_com_vozes_t1..t12.wav> /tmp/mix.wav [/tmp/sem_voz.wav]
   ffmpeg -i /tmp/mix.wav -af "loudnorm=I=-14:TP=-1.5:LRA=11" -ar 48000 -ac 2 \
     -c:a aac -b:a 128k assets/audio/bt-motion-03-mix.m4a
 """
@@ -348,6 +348,9 @@ voice = np.frombuffer(proc.stdout, dtype=np.float32).reshape(-1, 2).astype(np.fl
 if len(voice) < N:
     voice = np.vstack([voice, np.zeros((N - len(voice), 2))])
 
+# trilha sem ducking, guardada para a versão sem narração (argv[3], opcional)
+music_dry = music.copy()
+
 # ducking: a trilha abaixa ~8 dB enquanto a voz fala
 env = np.abs(voice).max(axis=1)
 win = int(0.12 * SR)
@@ -369,3 +372,15 @@ subprocess.run(
 )
 os.remove(sys.argv[2] + ".f32")
 print(f"peak={peak:.3f} -> {sys.argv[2]}")
+
+# versão sem narração: mesma trilha e mesmos efeitos, mesmo ganho do mix completo,
+# sem ducking (não há voz para abrir espaço). Para narrar por cima em outro aplicativo.
+if len(sys.argv) > 3:
+    bed = (music_dry * 0.6 + fx * 0.8) * fade[:, None] * (0.9 / peak)
+    bed.astype(np.float32).tofile(sys.argv[3] + ".f32")
+    subprocess.run(
+        ["ffmpeg", "-y", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "2", "-i", sys.argv[3] + ".f32", sys.argv[3]],
+        check=True,
+    )
+    os.remove(sys.argv[3] + ".f32")
+    print(f"sem narração -> {sys.argv[3]}")
