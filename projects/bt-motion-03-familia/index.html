@@ -126,12 +126,97 @@
         overflow: hidden;
       }
       #half-l {
-        clip-path: inset(0 50% 0 0);
         transform-origin: 0% 50%;
       }
       #half-r {
-        clip-path: inset(0 0 0 50%);
         transform-origin: 100% 50%;
+      }
+      #shake,
+      #shards {
+        position: absolute;
+        inset: 0;
+      }
+      .shard {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+      }
+      .shard img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      #crack {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: visible;
+        filter: drop-shadow(0 0 6px rgba(212, 175, 124, 0.85));
+      }
+      #crack polyline {
+        fill: none;
+        stroke: #faf8f4;
+        stroke-linejoin: miter;
+        stroke-linecap: round;
+      }
+      #crack .main {
+        stroke-width: 3.5;
+      }
+      #crack .br {
+        stroke-width: 2;
+      }
+      #crack .edge {
+        stroke-width: 1.4;
+        stroke: rgba(250, 248, 244, 0.8);
+      }
+      #particles {
+        position: absolute;
+        inset: 0;
+      }
+      .pt {
+        position: absolute;
+      }
+      #flash {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 50% 42%, rgba(250, 248, 244, 0.85), rgba(250, 248, 244, 0) 60%);
+        opacity: 0;
+      }
+      .fil-photo {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0 14px 34px rgba(8, 26, 53, 0.25);
+      }
+      .fil-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      #q3 {
+        justify-content: flex-start;
+        padding-top: 1030px;
+      }
+      .q3-photo {
+        position: absolute;
+        left: 100px;
+        top: 330px;
+        width: 880px;
+        height: 640px;
+        overflow: hidden;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
+      }
+      .q3-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
       }
       .half img {
         position: absolute;
@@ -254,7 +339,7 @@
         font-weight: 500;
         font-size: 19px;
         letter-spacing: 0.08em;
-        color: rgba(11, 31, 75, 0.62);
+        color: rgba(11, 31, 75, 0.74);
       }
       .rule {
         height: 2px;
@@ -861,11 +946,12 @@
       data-width="1080"
       data-height="1920"
       data-fps="30"
-      data-duration="18"
+      data-duration="26"
     >
       <!-- S1 + persistent separated couple -->
-      <section id="s-photo" class="clip" data-start="0" data-duration="10.2" data-track-index="1">
+      <section id="s-photo" class="clip" data-start="0" data-duration="16.115" data-track-index="1">
         <img id="photo-bg" src="assets/photos/couple-forehead.jpg" alt="" />
+        <div id="shake">
         <div id="half-l" class="half">
           <img src="assets/photos/couple-forehead.jpg" alt="" />
           <div class="shade"></div>
@@ -874,13 +960,18 @@
           <img src="assets/photos/couple-forehead.jpg" alt="" />
           <div class="shade"></div>
         </div>
+          <div id="shards"></div>
+          <svg id="crack" viewBox="0 0 1080 1920"></svg>
+        </div>
+        <div id="particles"></div>
+        <div id="flash"></div>
         <div id="photo-tint"></div>
         <div id="split-line"></div>
         <div class="center"><div id="fim">FIM?</div></div>
       </section>
 
       <!-- S2 false ending -->
-      <section id="s-false" class="clip" data-start="1.3" data-duration="1.5" data-track-index="2">
+      <section id="s-false" class="clip" data-start="1.755" data-duration="1.78" data-track-index="2">
         <div class="center" id="s2a">
           <div class="eyebrow" id="s2-eyebrow">A RELAÇÃO</div>
           <div class="mask"><div id="terminou">terminou.</div></div>
@@ -894,12 +985,12 @@
       </section>
 
       <!-- S3 sand ground -->
-      <section id="s-sand" class="clip" data-start="2.55" data-duration="7.65" data-track-index="0">
+      <section id="s-sand" class="clip" data-start="3.192" data-duration="12.922" data-track-index="0">
         <div id="sand-tex"></div>
       </section>
 
       <!-- S3-S5 accumulated decisions -->
-      <section id="s-world" class="clip" data-layout-allow-overlap data-layout-allow-occlusion data-start="2.7" data-duration="7.5" data-track-index="3">
+      <section id="s-world" class="clip" data-layout-allow-overlap data-layout-allow-occlusion data-start="3.365" data-duration="12.75" data-track-index="3">
         <div id="world">
           <div id="counter" class="item">
             <div class="lbl">DECISÕES EM ABERTO</div>
@@ -944,6 +1035,7 @@
           </div>
           <div id="it-fil" class="item">
             <div class="hair"></div>
+            <div class="fil-photo"><img src="assets/photos/kid-smile.jpg" alt="" /></div>
             <div class="word">filhos</div>
             <div class="hair"></div>
           </div>
@@ -968,10 +1060,10 @@
         </div>
       </section>
 
-      <section id="s-veil" class="clip" data-start="5.75" data-duration="4.45" data-track-index="4"></section>
+      <section id="s-veil" class="clip" data-start="8.55" data-duration="7.565" data-track-index="4"></section>
 
       <!-- S4 questions -->
-      <section id="s-q" class="clip" data-layout-allow-overlap data-start="5.8" data-duration="3.2" data-track-index="5">
+      <section id="s-q" class="clip" data-layout-allow-overlap data-start="8.635" data-duration="5.44" data-track-index="5">
         <div id="sweep"></div>
         <div class="center q" id="q1">
           <div class="small">Quem fica com a</div>
@@ -984,6 +1076,7 @@
           <div class="tick"></div>
         </div>
         <div class="center q" id="q3">
+          <div class="q3-photo"><img src="assets/photos/kid-field.jpg" alt="" /></div>
           <div class="small">E os</div>
           <div class="huge fit" data-max="900">FILHOS?</div>
           <div class="tick"></div>
@@ -996,15 +1089,15 @@
       </section>
 
       <!-- S5 overload -->
-      <section id="s-over" class="clip" data-layout-allow-overlap data-layout-allow-occlusion data-start="9" data-duration="1.2" data-track-index="6">
+      <section id="s-over" class="clip" data-layout-allow-overlap data-layout-allow-occlusion data-start="14.075" data-duration="2.04" data-track-index="6">
         <div id="over"></div>
       </section>
-      <section id="s-freeze" class="clip" data-start="9.95" data-duration="0.25" data-track-index="7">
+      <section id="s-freeze" class="clip" data-start="15.69" data-duration="0.425" data-track-index="7">
         <div id="freeze-tag">‖ PAUSA</div>
       </section>
 
       <!-- S6 thesis -->
-      <section id="s-thesis" class="clip" data-start="10.2" data-duration="2.2" data-track-index="8">
+      <section id="s-thesis" class="clip" data-start="16.115" data-duration="2.64" data-track-index="8">
         <div id="th-wrap">
           <div id="th1">O divórcio</div>
           <div id="th2-wrap">
@@ -1022,7 +1115,7 @@
       </section>
 
       <!-- S7 organization -->
-      <section id="s-org" class="clip" data-start="12.0" data-duration="3.1" data-track-index="9">
+      <section id="s-org" class="clip" data-start="18.275" data-duration="3.738" data-track-index="9">
         <div id="org-cam">
           <div class="gl v" style="left: 80px"></div>
           <div class="gl v" style="left: 540px"></div>
@@ -1076,7 +1169,7 @@
       </section>
 
       <!-- S8 CTA -->
-      <section id="s-cta" class="clip" data-start="14.9" data-duration="3.1" data-track-index="10">
+      <section id="s-cta" class="clip" data-start="21.755" data-duration="4.245" data-track-index="10">
         <div class="win" id="win-l">
           <img src="assets/photos/couple-forehead.jpg" alt="" />
           <div class="grade"></div>
@@ -1099,12 +1192,12 @@
         <img id="cta-logo" src="assets/brand/bt-logo.png" alt="Bispo &amp; Teixeira Advogados" />
       </section>
 
-      <section id="s-grain" class="clip" data-start="0" data-duration="18" data-track-index="11">
+      <section id="s-grain" class="clip" data-start="0" data-duration="26" data-track-index="11">
         <div id="vignette"></div>
         <div id="grain"></div>
       </section>
 
-      <audio id="sfx" src="assets/audio/bt-motion-03-sound.m4a" data-start="0" data-duration="18" data-track-index="12"></audio>
+      <audio id="sfx" src="assets/audio/bt-motion-03-sound.m4a" data-start="0" data-duration="26" data-track-index="12"></audio>
     </div>
 
     <script>
@@ -1170,6 +1263,107 @@
             el.setAttribute("data-layout-allow-occlusion", "");
           });
 
+        function mulberry(seed) {
+          return function () {
+            seed = (seed + 0x6d2b79f5) | 0;
+            var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }
+        var rnd = mulberry(20261005);
+        var YS = [0, 140, 290, 420, 560, 690, 800, 910, 1040, 1180, 1320, 1460, 1610, 1760, 1920];
+        var CX = YS.map(function (y, i) {
+          return 540 + (i % 2 ? 1 : -1) * (14 + rnd() * 34);
+        });
+        var G = YS.map(function () {
+          return 16 + rnd() * 34;
+        });
+        var LB = CX.map(function (x, i) {
+          return x - G[i];
+        });
+        var RB = CX.map(function (x, i) {
+          return x + G[i];
+        });
+        function pts(arr) {
+          return arr
+            .map(function (q) {
+              return q[0].toFixed(1) + "px " + q[1].toFixed(1) + "px";
+            })
+            .join(", ");
+        }
+        var leftPoly = [[0, 0]].concat(YS.map(function (y, i) { return [LB[i], y]; }), [[0, 1920]]);
+        var rightPoly = [[1080, 0]].concat(YS.map(function (y, i) { return [RB[i], y]; }), [[1080, 1920]]);
+        var SHARDS = [];
+        for (var i = 0; i < YS.length - 1; i++) {
+          var A = [LB[i], YS[i]], B = [RB[i], YS[i]], C = [RB[i + 1], YS[i + 1]], D = [LB[i + 1], YS[i + 1]];
+          var P = [CX[i], YS[i]], Q = [CX[i + 1], YS[i + 1]];
+          [[A, P, Q, -1], [A, Q, D, -1], [P, B, C, 1], [P, C, Q, 1]].forEach(function (tri) {
+            SHARDS.push({
+              poly: [tri[0], tri[1], tri[2]],
+              side: tri[3],
+              cx: (tri[0][0] + tri[1][0] + tri[2][0]) / 3,
+              cy: (tri[0][1] + tri[1][1] + tri[2][1]) / 3,
+            });
+          });
+        }
+        var shardHtml = "";
+        SHARDS.forEach(function (sh, k) {
+          shardHtml +=
+            '<div class="shard" id="sh' + k + '" style="clip-path:polygon(' + pts(sh.poly) + ");transform-origin:" + sh.cx.toFixed(0) + "px " + sh.cy.toFixed(0) +
+            'px"><img src="assets/photos/couple-forehead.jpg" alt="" /></div>';
+        });
+        document.getElementById("shards").innerHTML = shardHtml;
+        function line(arr) {
+          return arr
+            .map(function (q) {
+              return q[0].toFixed(1) + "," + q[1].toFixed(1);
+            })
+            .join(" ");
+        }
+        var IMPACT = 6;
+        var up = [], down = [];
+        for (var u = IMPACT; u >= 0; u--) up.push([CX[u], YS[u]]);
+        for (var d = IMPACT; d < YS.length; d++) down.push([CX[d], YS[d]]);
+        var svg = '<polyline class="main cl" points="' + line(up) + '" />' + '<polyline class="main cl" points="' + line(down) + '" />';
+        [2, 4, 5, 7, 9, 11].forEach(function (k) {
+          var dir = k % 2 ? 1 : -1;
+          var x = CX[k], y = YS[k], b = [[x, y]];
+          for (var j = 0; j < 3; j++) {
+            x += dir * (30 + rnd() * 60);
+            y += (rnd() - 0.5) * 70;
+            b.push([x, y]);
+          }
+          svg += '<polyline class="br cl" points="' + line(b) + '" />';
+        });
+        svg += '<polyline class="edge ce" points="' + line(YS.map(function (y, i) { return [LB[i], y]; })) + '" />';
+        svg += '<polyline class="edge ce" points="' + line(YS.map(function (y, i) { return [RB[i], y]; })) + '" />';
+        for (var r = 1; r < YS.length - 1; r++) {
+          svg += '<polyline class="edge ce" points="' + line([[LB[r], YS[r]], [RB[r], YS[r]]]) + '" />';
+        }
+        document.getElementById("crack").innerHTML = svg;
+        var PCOL = ["#FAF8F4", "#F4EDE2", "#D4AF7C", "rgba(250,248,244,0.6)", "#A66E52"];
+        var PARTS = [];
+        var ptHtml = "";
+        for (var n = 0; n < 90; n++) {
+          var k2 = Math.floor(rnd() * (YS.length - 1));
+          var py = YS[k2] + rnd() * (YS[k2 + 1] - YS[k2]);
+          var px = CX[k2] + (rnd() - 0.5) * 2 * G[k2];
+          var sz = 3 + rnd() * 12;
+          var dir2 = (px < 540 ? -1 : 1) * (rnd() < 0.2 ? -1 : 1);
+          PARTS.push({
+            dx: dir2 * (80 + rnd() * 480),
+            up: 40 + rnd() * 220,
+            fall: 500 + rnd() * 900,
+            rot: (rnd() - 0.5) * 720,
+            delay: rnd() * 0.1,
+          });
+          ptHtml +=
+            '<div class="pt" id="pt' + n + '" style="left:' + px.toFixed(0) + "px;top:" + py.toFixed(0) + "px;width:" + sz.toFixed(1) + "px;height:" + (sz * (0.5 + rnd())).toFixed(1) +
+            "px;background:" + PCOL[n % PCOL.length] + '"></div>';
+        }
+        document.getElementById("particles").innerHTML = ptHtml;
+
         function fit() {
           document.querySelectorAll(".fit").forEach(function (el) {
             var max = parseFloat(el.getAttribute("data-max"));
@@ -1185,12 +1379,43 @@
         }
 
         function build() {
-          var tl = gsap.timeline({ paused: true });
+          var BP = [[0, 0], [1.3, 1.755], [2.7, 3.365], [10.2, 16.115], [15.0, 21.875], [18.0, 26.0]];
+          function M(t) {
+            for (var b = 1; b < BP.length; b++) {
+              if (t <= BP[b][0]) return BP[b - 1][1] + ((t - BP[b - 1][0]) * (BP[b][1] - BP[b - 1][1])) / (BP[b][0] - BP[b - 1][0]);
+            }
+            return BP[BP.length - 1][1] + (t - BP[BP.length - 1][0]);
+          }
+          function warp(v, p) {
+            var c = Object.assign({}, v);
+            var dur = v.duration == null ? 0.5 : v.duration;
+            c.duration = M(p + dur) - M(p);
+            if (typeof c.stagger === "number") c.stagger = (c.stagger * (M(p + 0.01) - M(p))) / 0.01;
+            return c;
+          }
+          var raw = gsap.timeline({ paused: true });
+          var tl = {
+            to: function (t, v, p) {
+              raw.to(t, warp(v, p), M(p));
+              return tl;
+            },
+            fromTo: function (t, f, v, p) {
+              raw.fromTo(t, f, warp(v, p), M(p));
+              return tl;
+            },
+            set: function (t, v, p) {
+              raw.set(t, v, M(p));
+              return tl;
+            },
+          };
           var E = { snap: "expo.out", io: "power3.inOut" };
 
           // initial states
           gsap.set("#split-line", { scaleY: 0, opacity: 0 });
           gsap.set("#fim", { opacity: 0, scale: 1.3 });
+          gsap.set(".pt", { opacity: 0 });
+          gsap.set(".half", { transformPerspective: 1600 });
+          gsap.set(".shard", { transformPerspective: 1100 });
           gsap.set(["#s2-eyebrow", "#s2-mas", "#nao", "#nao-line", "#slash"], { opacity: 0 });
           gsap.set("#terminou", { yPercent: 105 });
           gsap.set("#sand-tex", { opacity: 1 });
@@ -1220,7 +1445,46 @@
           gsap.set(["#cta-txt", "#cta-arrow", "#cta-sub", "#cta-logo"], { opacity: 0 });
 
           // ---------- S1 HOOK ----------
-          tl.fromTo(".half img", { scale: 1.04 }, { scale: 1.17, duration: 1.0, ease: "power2.out" }, 0);
+          tl.fromTo(".half img, .shard img", { scale: 1.04 }, { scale: 1.17, duration: 1.0, ease: "power2.out" }, 0);
+          document.querySelectorAll("#crack polyline").forEach(function (pl) {
+            var L = pl.getTotalLength();
+            gsap.set(pl, { strokeDasharray: L, strokeDashoffset: L });
+          });
+          var cl = document.querySelectorAll("#crack .cl");
+          tl.to([cl[0], cl[1]], { strokeDashoffset: 0, duration: 0.24, ease: "power2.out" }, 0.46);
+          tl.to(Array.prototype.slice.call(cl, 2), { strokeDashoffset: 0, duration: 0.18, ease: "power2.out", stagger: 0.025 }, 0.58);
+          tl.to("#crack .ce", { strokeDashoffset: 0, duration: 0.14, ease: "power1.out", stagger: 0.006 }, 0.72);
+          [[0.46, 9, -3], [0.49, -7, 2], [0.52, 4, 0], [0.55, 0, 0], [0.72, 6, 2], [0.75, -5, -1], [0.78, 0, 0]].forEach(function (k) {
+            tl.to("#shake", { x: k[1], y: k[2], duration: 0.03, ease: "none" }, k[0]);
+          });
+          tl.to("#crack", { opacity: 0, duration: 0.1 }, 0.96);
+          tl.set("#half-l", { clipPath: "polygon(" + pts(leftPoly) + ")" }, 0.96);
+          tl.set("#half-r", { clipPath: "polygon(" + pts(rightPoly) + ")" }, 0.96);
+          tl.set(".shard", { opacity: 1 }, 0.95);
+          tl.fromTo("#flash", { opacity: 0 }, { opacity: 0.55, duration: 0.05, ease: "none" }, 0.95);
+          tl.to("#flash", { opacity: 0, duration: 0.3, ease: "power2.out" }, 1.0);
+          SHARDS.forEach(function (sh, k) {
+            var id = "#sh" + k;
+            tl.to(id, {
+              x: sh.side * (30 + rnd() * 220),
+              rotation: (rnd() - 0.5) * 140,
+              rotationX: (rnd() - 0.5) * 110,
+              rotationY: (rnd() - 0.5) * 90,
+              scale: 1 + rnd() * 0.55,
+              duration: 1.0,
+              ease: "power2.out",
+            }, 0.96 + rnd() * 0.05);
+            tl.to(id, { y: 260 + rnd() * 700, duration: 1.1, ease: "power2.in" }, 0.97);
+            tl.to(id, { opacity: 0, duration: 0.35, ease: "power1.in" }, 1.55 + rnd() * 0.2);
+          });
+          PARTS.forEach(function (pt, k) {
+            var id = "#pt" + k, t0 = 0.96 + pt.delay;
+            tl.set(id, { opacity: 1 }, t0);
+            tl.fromTo(id, { x: 0, rotation: 0 }, { x: pt.dx, rotation: pt.rot, duration: 1.2, ease: "power3.out" }, t0);
+            tl.fromTo(id, { y: 0 }, { y: -pt.up, duration: 0.28, ease: "power2.out" }, t0);
+            tl.to(id, { y: pt.fall, duration: 0.95, ease: "power2.in" }, t0 + 0.28);
+            tl.to(id, { opacity: 0, duration: 0.4, ease: "none" }, t0 + 0.85);
+          });
           tl.fromTo("#photo-bg", { scale: 1.1 }, { scale: 1.22, duration: 1.3, ease: "none" }, 0);
           tl.fromTo(".half", { filter: "blur(12px)" }, { filter: "blur(0px)", duration: 0.32, ease: "power2.out" }, 0);
           tl.to(".half", { filter: "blur(3px)", duration: 0.08, ease: "none" }, 0.5);
@@ -1230,10 +1494,8 @@
           tl.to("#fim", { opacity: 0, scale: 0.86, duration: 0.1, ease: "power2.in" }, 0.86);
           tl.to(".half .shade", { opacity: 0.35, duration: 0.15 }, 0.3);
           tl.to(".half .shade", { opacity: 0, duration: 0.2 }, 0.88);
-          tl.to("#split-line", { scaleY: 1, opacity: 1, duration: 0.14, ease: E.snap }, 0.86);
-          tl.to("#split-line", { opacity: 0, duration: 0.15 }, 1.1);
-          tl.fromTo("#half-l", { x: 0, rotationY: 0 }, { x: -330, rotationY: 14, duration: 0.42, ease: E.io }, 0.96);
-          tl.fromTo("#half-r", { x: 0, rotationY: 0 }, { x: 330, rotationY: -14, duration: 0.42, ease: E.io }, 0.96);
+          tl.fromTo("#half-l", { x: 0, rotationY: 0, scale: 1 }, { x: -330, scale: 1.12, rotationY: 14, duration: 0.42, ease: E.io }, 0.96);
+          tl.fromTo("#half-r", { x: 0, rotationY: 0, scale: 1 }, { x: 330, scale: 1.12, rotationY: -14, duration: 0.42, ease: E.io }, 0.96);
           tl.to(".half", { filter: "blur(5px)", duration: 0.16, ease: "power1.in" }, 0.98);
           tl.to(".half", { filter: "blur(0px)", duration: 0.2, ease: "power1.out" }, 1.16);
           tl.to("#photo-bg", { opacity: 0, duration: 0.3 }, 0.98);
@@ -1326,6 +1588,8 @@
           tl.to("#q2", { x: -30, duration: 0.45, ease: "none" }, 6.86);
           tl.to("#q2", { opacity: 0, scale: 0.88, duration: 0.12, ease: "power2.in" }, 7.3);
           // Q3 soft, important
+          tl.fromTo("#q3 .q3-photo", { clipPath: "inset(0% 0% 100% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.5, ease: "power3.out" }, 7.4);
+          tl.fromTo("#q3 .q3-photo img", { scale: 1.16 }, { scale: 1.02, duration: 0.78, ease: "none" }, 7.4);
           tl.fromTo("#q3", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" }, 7.42);
           tl.to("#q3", { y: -12, duration: 0.2, ease: "none" }, 7.97);
           tl.to("#q3", { opacity: 0, duration: 0.14 }, 8.08);
@@ -1429,7 +1693,7 @@
           // grain drift
           tl.fromTo("#grain", { x: 0, y: 0 }, { x: 120, y: 90, duration: 18, ease: "steps(140)" }, 0);
 
-          return tl;
+          return raw;
         }
 
         document.fonts.ready.then(function () {

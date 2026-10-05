@@ -15,7 +15,17 @@ import wave
 import numpy as np
 
 SR = 48000
-DUR = 18.0
+DUR = 26.0
+BP = [(0, 0), (1.3, 1.755), (2.7, 3.365), (10.2, 16.115), (15.0, 21.875), (18.0, 26.0)]
+
+
+def M(t):
+    """Raw storyboard time -> slowed timeline time (mirrors index.html)."""
+    for (a0, b0), (a1, b1) in zip(BP, BP[1:]):
+        if t <= a1:
+            return b0 + (t - a0) * (b1 - b0) / (a1 - a0)
+    return BP[-1][1] + (t - BP[-1][0])
+
 N = int(SR * DUR)
 rng = np.random.default_rng(3318)
 L = np.zeros(N)
@@ -24,7 +34,7 @@ t_all = np.arange(N) / SR
 
 
 def place(sig, t, gain=1.0, pan=0.0):
-    i = int(t * SR)
+    i = int(M(t) * SR)
     j = min(N, i + len(sig))
     if j <= i:
         return
@@ -103,7 +113,7 @@ def tone(f, dur, a=0.01, d=0.6, harm=(1, 0.3, 0.1)):
 
 # ---- music bed: low pad, pulse, then calm resolve ----
 def pad(t0, t1, freqs, gain):
-    n = int((t1 - t0) * SR)
+    n = int((M(t1) - M(t0)) * SR)
     x = np.arange(n) / SR
     s = sum(np.sin(2 * np.pi * f * x + k) for k, f in enumerate(freqs)) / len(freqs)
     s *= 1 + 0.25 * np.sin(2 * np.pi * 0.3 * x)
@@ -132,13 +142,41 @@ for b in np.arange(12.45, 14.8, 0.6):
     place(kick(0.25), b, 0.25)
 
 # riser into freeze
-n = int(1.4 * SR)
+n = int((M(9.95) - M(8.55)) * SR)
 r = noise(n)
 r = r - lowpass(r, 800)
 place(r * np.linspace(0, 1, n) ** 2 * 0.22, 8.55)
 
 # ---- events ----
 place(impact(55, 0.6, 0.6), 0.3, 0.75)          # FIM?
+
+
+def crackle(n_ticks, span):
+    out = np.zeros(int(span * SR) + 4000)
+    for _ in range(n_ticks):
+        at = int(rng.random() * span * SR)
+        out[at:at + 2400] += click(1500 + rng.random() * 4500, 0.05, 0.25 + rng.random() * 0.3)
+    return out
+
+
+def tinkle(count, span):
+    out = np.zeros(int(span * SR) + SR)
+    for _ in range(count):
+        at = int(rng.random() ** 1.6 * span * SR)
+        f = 2200 + rng.random() * 5200
+        out[at:at + int(0.5 * SR)] += tone(f, 0.5, 0.001, 0.08 + rng.random() * 0.15, (1, 0.4, 0.15)) * (0.05 + rng.random() * 0.08)
+    return out
+
+
+place(crackle(10, 0.12), 0.46, 1.0)             # crack impact
+place(impact(70, 0.35, 0.8), 0.46, 0.45)
+place(crackle(14, 0.28), 0.58, 0.8, 0.2)        # crack spreading
+place(crackle(8, 0.12), 0.72, 0.9, -0.2)
+burst = noise(int(0.6 * SR))
+burst = (burst - lowpass(burst, 2500)) * np.exp(-np.arange(len(burst)) / SR * 9)
+place(burst * 0.55, 0.95, 1.0)                  # shatter
+place(tinkle(70, 1.1), 0.96, 1.0, -0.35)
+place(tinkle(70, 1.1), 0.97, 1.0, 0.35)
 place(whoosh(0.5), 0.8, 0.9)                    # split
 place(impact(40, 0.8, 0.2), 1.1, 0.4)
 place(whoosh(0.3, False), 1.85, 0.7, 0.4)       # TERMINOU swiped
@@ -174,7 +212,7 @@ for i in range(3):
     place(whoosh(0.2, False), 9.2 + i * 0.12, 0.5, (-1) ** i * 0.6)
 
 # HARD FREEZE: cut everything 9.95 to 10.2 except a faint air tone
-fi, fo = int(9.95 * SR), int(10.2 * SR)
+fi, fo = int(M(9.95) * SR), int(M(10.2) * SR)
 L[fi:fo] *= 0.0
 R[fi:fo] *= 0.0
 air = noise(fo - fi)
