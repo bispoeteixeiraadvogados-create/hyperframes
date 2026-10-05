@@ -34,10 +34,10 @@ $S/pipeline.sh analisar ~/videos/<nome>/bruto.mp4    # transcrição + takes_pac
 ```
 
 1. Leia `edit/takes_packed.md` e `edit/cut_report.md`. O `auto_cut.py` remove pausas
-   > = 0.35s (envelope de energia, não só a transcrição) e recomeços/repetições
-   > (mantém a última tentativa). Ele **erra**: revise cada remoção. Enumerações e
-   > repetições retóricas intencionais devem ficar. Corrija `edl.json` à mão quando
-   > precisar (cortes sempre em fronteira de palavra, margem 30 a 200ms).
+   a partir de 0.35s (envelope de energia, não só a transcrição) e recomeços e
+   repetições (mantém a última tentativa). Ele **erra**: revise cada remoção.
+   Enumerações e repetições retóricas intencionais devem ficar. Corrija `edl.json` à
+   mão quando precisar (cortes sempre em fronteira de palavra, margem 30 a 200ms).
 2. Em caso de dúvida num corte, `python ~/video-use/helpers/timeline_view.py <video> <ini> <fim>`.
 3. `$S/pipeline.sh cortar ~/videos/<nome>/edit` renderiza `edit/cut.mp4` (fades de 30ms,
    loudnorm -14 LUFS) e prepara `edit/hyperframes/` com o transcript já na linha do
