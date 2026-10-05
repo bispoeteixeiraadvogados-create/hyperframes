@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: "Inter";
+        src: url("fonts/Inter-400-latin.woff2") format("woff2");
+        font-weight: 400;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("fonts/Inter-700-latin.woff2") format("woff2");
+        font-weight: 700;
+        font-display: block;
+      }
+      :root {
+        --panel: rgba(12, 18, 32, 0.88);
+        --text: #f5f3ee;
+        --muted: #b9c0cc;
+        --accent: #f2b33d;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+        font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+      }
+      #stage {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      .video-wrapper {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+      }
+      .video-wrapper video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .card-host {
+        position: absolute;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .lower-third {
+        position: absolute;
+        left: 96px;
+        bottom: 96px;
+        padding: 28px 40px;
+        background: var(--panel);
+        border-left: 8px solid var(--accent);
+        border-radius: 10px;
+        color: var(--text);
+      }
+      .lower-third .kicker {
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: var(--accent);
+      }
+      .lower-third .title {
+        margin-top: 6px;
+        font-size: 56px;
+        font-weight: 700;
+      }
+      .stat {
+        position: absolute;
+        right: 120px;
+        top: 50%;
+        width: 560px;
+        margin-top: -190px;
+        padding: 44px 48px;
+        background: var(--panel);
+        border-radius: 16px;
+        color: var(--text);
+        text-align: center;
+      }
+      .stat .num {
+        font-size: 200px;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--accent);
+      }
+      .stat .label {
+        margin-top: 12px;
+        font-size: 40px;
+        font-weight: 700;
+      }
+      .list {
+        position: absolute;
+        right: 96px;
+        top: 50%;
+        width: 720px;
+        margin-top: -230px;
+        padding: 40px 44px;
+        background: var(--panel);
+        border-radius: 16px;
+        color: var(--text);
+      }
+      .list .head {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: var(--accent);
+        margin-bottom: 20px;
+      }
+      .list .item {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 18px 0;
+        font-size: 44px;
+        font-weight: 700;
+      }
+      .list .badge {
+        flex: none;
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #10151f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="stage"
+      data-composition-id="talking-head-recut"
+      data-start="0"
+      data-duration="20.4"
+      data-fps="30"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="video-wrapper" id="video-wrap">
+        <video
+          id="bg-video"
+          src="input-video.mp4"
+          playsinline
+          data-has-audio="true"
+          data-start="0"
+          data-duration="20.4"
+          data-track-index="1"
+        ></video>
+      </div>
+
+      <div
+        id="card-01"
+        class="card-host clip"
+        data-card-id="card-01"
+        data-start="0.5"
+        data-duration="5.6"
+        data-track-index="2"
+        style="left: 0; top: 0; width: 1920px; height: 1080px; visibility: hidden; opacity: 0"
+      >
+        <div class="lower-third" id="c1-box">
+          <div class="kicker" id="c1-kicker">IA NO ESCRITÓRIO</div>
+          <div class="title" id="c1-title">3 motivos para adotar agora</div>
+        </div>
+      </div>
+
+      <div
+        id="card-02"
+        class="card-host clip"
+        data-card-id="card-02"
+        data-start="8.0"
+        data-duration="4.0"
+        data-track-index="2"
+        style="left: 0; top: 0; width: 1920px; height: 1080px; visibility: hidden; opacity: 0"
+      >
+        <div class="stat" id="c2-box">
+          <div class="num"><span id="c2-num">0</span>%</div>
+          <div class="label" id="c2-label">menos tempo gasto</div>
+        </div>
+      </div>
+
+      <div
+        id="card-03"
+        class="card-host clip"
+        data-card-id="card-03"
+        data-start="12.1"
+        data-duration="8.3"
+        data-track-index="2"
+        style="left: 0; top: 0; width: 1920px; height: 1080px; visibility: hidden; opacity: 0"
+      >
+        <div class="list" id="c3-box">
+          <div class="head">POR QUE USAR IA</div>
+          <div class="item" id="c3-i1"><span class="badge">1</span>Economia de tempo</div>
+          <div class="item" id="c3-i2"><span class="badge">2</span>Menos erros</div>
+          <div class="item" id="c3-i3"><span class="badge">3</span>Respostas mais rápidas</div>
+        </div>
+      </div>
+
+      <script src="vendor/gsap.min.js"></script>
+      <script>
+        (function () {
+          const tl = window.gsap.timeline({ paused: true });
+          const host = (id) => '.card-host[data-card-id="' + id + '"]';
+          function enter(id, t) {
+            tl.set(host(id), { visibility: "visible" }, t);
+            tl.fromTo(host(id), { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power2.out" }, t);
+          }
+          function exit(id, tEnd) {
+            tl.to(host(id), { opacity: 0, duration: 0.35, ease: "power2.in" }, tEnd - 0.35);
+            tl.set(host(id), { visibility: "hidden" }, tEnd);
+          }
+
+          // card-01: título em lower-third, chega antes de "três motivos" (2.08s)
+          enter("card-01", 0.5);
+          tl.fromTo("#c1-box", { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 0.5);
+          tl.fromTo("#c1-title", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 1.6);
+          exit("card-01", 6.1);
+
+          // card-02: contagem até 40, aterrissa em "40%" (10.42s)
+          enter("card-02", 8.0);
+          tl.fromTo("#c2-box", { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.6)" }, 8.0);
+          (function () {
+            const o = { v: 0 };
+            tl.to(o, { v: 40, duration: 2.2, ease: "power2.out", onUpdate: function () {
+              document.getElementById("c2-num").textContent = String(Math.round(o.v));
+            } }, 8.3);
+          })();
+          exit("card-02", 12.0);
+
+          // card-03: lista cresce com a fala (segundo 12.13, terceiro 16.05)
+          enter("card-03", 12.1);
+          tl.fromTo("#c3-box", { x: 80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 12.1);
+          tl.fromTo("#c3-i1", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 12.3);
+          tl.fromTo("#c3-i2", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 13.2);
+          tl.fromTo("#c3-i3", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 17.2);
+          exit("card-03", 20.4);
+
+          window.__timelines["talking-head-recut"] = tl;
+        })();
+      </script>
+    </div>
+  </body>
+</html>

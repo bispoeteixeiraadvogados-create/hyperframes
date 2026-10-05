@@ -1,0 +1,8 @@
+# Vídeos e saídas de sessão não entram no git (tamanho e privacidade).
+entrada/
+*.mp4
+*.mov
+*.webm
+*.wav
+edit/
+__pycache__/
